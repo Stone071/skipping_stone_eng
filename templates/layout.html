@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Zachary Stone" />
+    <meta name="description"
+        content="The personal website of Zachary Stone, showcasing various software and engineering related personal projects." />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+    <title>Skipping Stone Engineering</title>
+    <!-- Allow child pages to add additional elements to head -->
+    {% block extra_head_content %}{% endblock %}
+</head>
+
+<body>
+    <!-- Have link to homepage be common -->
+    <header>
+        <nav>
+            <a class="homeButton" href="{{ url_for('index') }}">Home</a>
+        </nav>
+    </header>
+    
+    <hr>
+
+    <!-- Allow each page to provide its own main content-->
+    <main>
+        {% block main_content %}{% endblock %}
+    </main>
+
+    <hr>
+
+    <!-- Have some common footer -->
+    <footer>
+        <a class="repoLink" href="https://github.com/stone071/">My GitHub</a>
+        <p>&copy; 2026 Zachary Stone</p>
+    </footer>
+
+    <!-- Space for any future common javascript -->
+    <!-- <script src="{{ url_for('static', filename='main.js') }}" -->
+</body>
+
+</html>
