@@ -21,6 +21,11 @@ main {
     display: flex;
     align-items: center;
 }
+.branchBox {
+    display: flex;
+    align-items: center;
+    align-content: stretch;
+}
 
 /* center content in footer */
 footer {
@@ -56,6 +61,16 @@ h2 {
     border-bottom: 2px solid #ccc; /* Add a subtle line under subheadings */
     padding-bottom: 0.5rem;
 }
+h3 {
+    font-size: 1.5rem; /* Larger main heading */
+    color: #444;
+    margin-bottom: 1rem; /* Add space below the heading */
+}
+h4 {
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 1rem; /* Add space below the heading */
+}
 p {
     font-size: 1rem;
     margin-bottom: 1rem;
@@ -76,10 +91,18 @@ a:hover, a:focus {
 .repoLink {
     font-weight: bold;
 }
+.projectLink {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 1rem;
+}
 
 /* Style the tables */
 table, th, td {
     border: 1px solid;
+}
+.emptyBox {
+    background-color: #000;
 }
 
 /* Some Images */
