@@ -1,0 +1,111 @@
+/* styles.css */
+body {
+    font-family: sans-serif; /* Use a common, clean font */
+    background-color: #f4f4f4; /* A light, neutral background */
+    color: #333; /* Dark gray text for readability */
+    margin: 5px; /* Remove default body margin */
+    line-height: 1.6; /* Increase line height for better readability */
+}
+/* Make main content stand out from background page*/
+/* Add internal space (padding) and external space (margin) to content sections */
+main {
+    width: 80%; /* Keep content centered and readable on large screens */
+    margin: 2rem auto; /* Center the container horizontally */
+    padding: 1rem;
+    background-color: #fff; /* White background for the main content area */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add a subtle shadow for depth */
+    border-radius: 5px; /* Slightly rounded corners */
+}
+/* Flexbox container allows horizontal stacking */
+.container {
+    display: flex;
+    align-items: center;
+}
+.branchBox {
+    display: flex;
+    align-items: center;
+    align-content: stretch;
+}
+
+/* center content in footer */
+footer {
+    text-align: center;
+}
+
+/* center content in header */
+header {
+    text-align: center;
+}
+
+/* Style my home button at top of page */
+.homeButton {
+    font-size: 1.8rem;
+    color: #444;
+    text-decoration: none; /* Remove the default underline */
+}
+.homeButton:hover, a:focus {
+    color: #444;
+    text-decoration: underline; /* Add underline on hover for usability */
+}
+
+/* General text styling */
+h1 {
+    font-size: 2.5rem; /* Larger main heading */
+    color: #000;
+    text-align: center; /* Center your main title */
+    margin-bottom: 1rem; /* Add space below the heading */
+}
+h2 {
+    font-size: 1.8rem;
+    color: #444;
+    border-bottom: 2px solid #ccc; /* Add a subtle line under subheadings */
+    padding-bottom: 0.5rem;
+}
+h3 {
+    font-size: 1.5rem; /* Larger main heading */
+    color: #444;
+    margin-bottom: 1rem; /* Add space below the heading */
+}
+h4 {
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 1rem; /* Add space below the heading */
+}
+p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+.projectHead {
+    text-align: center;
+}
+
+/* Style the links on the pages */
+a {
+    color: #007bff; /* A standard blue for links */
+    text-decoration: none; /* Remove the default underline */
+}
+a:hover, a:focus {
+    text-decoration: underline; /* Add underline on hover for usability */
+    color: #0056b3;
+}
+.repoLink {
+    font-weight: bold;
+}
+.projectLink {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Style the tables */
+table, th, td {
+    border: 1px solid;
+}
+.emptyBox {
+    background-color: #000;
+}
+
+/* Some Images */
+.botCapImg {
+    max-width: 100%;
+}

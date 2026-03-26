@@ -1,0 +1,132 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+
+    <div class="projectHead">
+        <h1>Bottle Cap Imager</h1>
+        <p>Bottle Cap Imager is a collection of python programs to generate images which could be made out of bottle caps.</p>
+        <a class="repoLink" href="https://github.com/Stone071/bottle_cap_imager">Repository</a>
+    </div>
+
+    <h2>Background</h2>
+    <p>
+        On a cross-country drive from Connecticut to Seattle, my girlfriend and I found ourselves in Crescent City, CA. 
+        We got some coffee and stopped for a walk on the beach, where we ran into an incredible mural of an ocean wave made 
+        entirely of repurposed plastic lids, bottle caps, and other similar items. I had been enjoying the trip very much, 
+        but was in need of a project to think about, and the inspiration was immediate. I wanted to write a program to do 
+        something similar -- create murals of discrete circular elements from an image.
+    </p>
+
+    <h2>Overview</h2>
+    <p>The goal of transforming an input image into a discrete set of circular "bottle caps" is achieved through a few steps.</p>
+    <ol>
+        <li>Simplify the coloration of the image. There may be hundreds or thousands of unique colors in an image. 
+            This should be reduced to a couple dozen or fewer for any hope of constructing this image out of bottle caps.
+        </li>
+        <li>Mask off the pixels between the bottle caps.</li>
+        <li>Ensure that all pixels within the same bottle cap have the same color.</li>
+    </ol>    
+    <p>
+        Step (1.) is handled by pix_sort.py, and steps (2.) and (3.) are handled by lens_mask.py. To streamline this process, 
+        image_pipeline.py runs these two steps after each other.
+    </p>
+    <p>
+        Additionally, gif_pipeline.py creates many images from a single input with different levels of detail due to different 
+        sized bottle caps being used. These images are then composed into a single gif, which has the appearance of details 
+        fading in and out of abstract forms. In my opinion this is the most interesting output of the program.
+    </p>
+
+    <h2>Usage</h2>
+    <p>Please refer to the README in the repository linked above for information on using this program.</p>
+
+    <h2>Example Inputs and Outputs</h2>
+    <h3>Images</h3>
+    <table>
+        <colgroup>
+            <col style="width: 33%" />
+            <col style="width: 33%" />
+            <col style="width: 33%" />
+        </colgroup>
+        <tr>
+            <th>Original</th>
+            <th>Simplified Colors</th>
+            <th>Bottlecap Lensed</th>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='burlington-sunset.jpg') }}"/>
+            </td>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='burlington-sunset-thresh15.PNG') }}"/>
+            </td>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='burlington-sunset-thresh15-lens20.PNG') }}"/>
+            </td>
+        </tr>
+        <tr>
+            <td>This is a picture ofthe sunset I took on Lake Champlain in Burlington, VT.</td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='my-boat.jpeg') }}"/>
+            </td>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='my-boat-thresh15.PNG') }}"/>
+            </td>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='my-boat-thresh15-lens20.PNG') }}"/>
+            </td>
+        </tr>
+        <tr>
+            <td>This is a a picture of a rowboat I finished building in summer 2025.</td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='grand-budapest-hotel-lobby.jpg') }}"/>
+            </td>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='grand-budapest-hotel-lobby-thresh40.PNG') }}"/>
+            </td>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='grand-budapest-hotel-lobby-thresh40-lens4.PNG') }}"/>
+            </td>
+        </tr>
+        <tr>
+            <td>This is not my photograph. This is a scene from The Grand Budapest Hotel.
+            The monochromatic scheme of Wes Anderson's sets make them great candidates for
+            color reduction.</td>
+            <td>There are only 24 unique colors in this image.</td>
+        </tr>
+
+    </table>
+    <h3>Gifs</h3>
+    <p>Like I said above, I think the gif outputs here are the most interesting.</p>
+    <img 
+        src="{{ url_for('static', filename='burlington-sunset.gif') }}"
+        style="width: 50%"/>
+    <img 
+        src="{{ url_for('static', filename='my-boat.gif') }}"
+        style="width: 50%"/>
+    <img 
+        src="{{ url_for('static', filename='grand-budapest-hotel-lobby.gif') }}"
+        style="width: 50%"/>
+            
+    <h3>Future Plans</h3>
+    <p>I'm not quite done with this project. I've tried doing a bit of video rendering with it. I occasionally
+    like to study with with nature videos in the background, and I think the idea of a "bottle cap"
+    ocean scene with the sounds of waves rolling onto the beach could be pleasing. I also have not actually
+    achieved my original goal, which was to use circles of different sizes that could be overlapped, like the
+    original mural I saw. Finally, I think it could be interesting to make a color-by-numbers book using
+    the bottle cap images. I may make a small web app to do this conversion from image to color-by-numbers style
+    output.</p>
+{% endblock %}

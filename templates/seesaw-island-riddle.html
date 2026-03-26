@@ -1,0 +1,113 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+
+    <div class="projectHead">
+        <h1 id="seesaw_riddle">Seesaw Island Riddle</h1>
+        <p>A small text-based game which allows the user to play out the seesaw island riddle from Brooklyn 99.</p>
+        <a class="repoLink" href="https://github.com/Stone071/Seesaw_Riddle">Repository</a>
+    </div>
+
+    <h2 id="background">Background</h2>
+    <p>This program is a text-based game which allows the user to play out
+    the seesaw island riddle from Brooklyn 99, paraphrased below.</p>
+    <p><strong>There are 12 people on an island. There is a seesaw on the
+    island. 11 of the people weigh the exact same amount. The other person
+    has a slightly different weight. The user must determine who the person
+    of unequal weight is using only the seesaw, and the seesaw can only be
+    used 3 times.</strong></p>
+    <p>I heard the riddle on the show and became a little obsessed with it.
+    I spent much of my spare time thinking about the riddle, and avoided any
+    and all internet searches which might reveal the answer. I really wanted
+    the satisfaction of having solved it for myself.</p>
+    <p>Once I had an algorithm I thought worked, I wrote this program to
+    give myself a nice way to test it.</p>
+    <div style="display: flex; justify-content: center;">
+        <img src="{{ url_for('static', filename='seesaw_riddle_screenshot.png')}}"/>
+    </div>
+    <p><strong><em>NOTE: The balance computation does not take into account
+    the distance of the people from the fulcrum of the seesaw. It is
+    computed as if all people present on the seesaw are equidistant from the
+    fulcrum. One of my original solutions was dependent on observing the
+    speed with which the seesaw fell. I carefully asked an AI chatbot if the
+    solution to the riddle depended on this, and was told the accepted
+    solutions do not. Since the velocity of the seesaw does not matter, the
+    exact position of each person does not either, only what side they are
+    on.</em></strong></p>
+
+    <h2 id="build-dependencies">Building the Program</h2>
+    <p>Please refer to the README in the repository linked above for information on building this program.</p>
+
+    <h2 id="how-to-play">How to Play</h2>
+    <p>The game is played in a terminal. <code>$ make play</code> will build
+    and start the game for you.</p>
+    <p>When the game is first started, an screen explaining the instructions
+    will appear. You can enter ‘M’ at any time to see this screen again.
+    Here is a summary:</p>
+    <ul>
+        <li>‘A9’ -&gt; Move islander A to postion 9.</li>
+        <li>‘R’ -&gt; Remove all islanders from the seesaw.</li>
+        <li>‘T’ -&gt; Test the current seesaw setup. This is one of your three
+        seesaw uses.</li>
+        <li>‘W’ -&gt; Discover who is the special islander.</li>
+        <li>‘Q’ -&gt; Quit the game.</li>
+        <li>‘M’ -&gt; Display instructions message.</li>
+    </ul>
+    <p>Each time you run the game, the special islander is selected at
+    random, and the weight difference is random as well.</p>
+    <p><strong><em>NOTE: This program was written on a linux machine, and
+    has only been played on Ubuntu and MacOS. The Makefile is not written
+    for Windows, and there may be graphical glitches on other operating
+    systems related to clearing the screen.</em></strong></p>
+
+    <h2>My Algorithm</h2>
+    <p>My algorithm is based on a few <strong>ideas</strong></p>
+    <ol>
+        <li>It is desirable to use more islanders per operation than fewer, 
+        but not desirable to use all the islanders in a single operation.</li>
+        <li>Each time an islander is placed on the seesaw, additional knowledge
+        about that islander may be gained.</li>
+        <li>Different arrangements of the same set of islanders can produce
+        different outcomes.</li>
+        <li>Islanders which have been proven to have the standard weight may be
+        used to test against unknown islanders.</li>
+    </ol>
+    
+    <h3>Branching Tree</h3>
+    <p>In this tree, the islanders will have names A, B, C, D, E, F, G, H, I.</p>
+    <p>The words "safe individual" will be used to describe an islander which has been shown already to not be
+    the source of imbalance.</p>
+    <p>The branching logic for the algorithm is slightly too large to be read in one chart so two will be used.
+    Both charts share the same Test 1, but each displays the logic for one branch of the two branches following Test 1.</p>
+
+    <h4>Flowchart 1 -- Test 1 was balanced</h4>
+    <div style="display: flex; justify-content: center;">
+        <img width="80%" src="{{ url_for('static', filename='set-IJKL.drawio.svg') }}"/>
+    </div>
+    <h4>Flowchart 2 -- Test 2 was unbalanced</h4>
+    <div style="display: flex; justify-content: center;">
+        <img width="80%" src="{{ url_for('static', filename='set-ABCDEFGH.drawio.svg') }}"/>
+    </div>
+
+    <h3>Example from the Game</h3>
+    <p>The branching logic can be hard to follow without showing results. The following is an example which follows the
+    rightmost path in Flowchart 2.</p>
+    <p><strong>Test 1</strong></p>
+    <p>SEESAW: ABCD -^- EFGH</p>
+    <p>The RIGHT half of the seesaw drops toward the ground.</p>
+    <p>From this, we know the imbalanced islander is in the set ABCDEFGH.</p>
+    <p><strong>Test 2</strong></p>
+    <p>SEESAW: AFC -^- EBI</p>
+    <p>The RIGHT half of the seesaw drops toward the ground.</p>
+    <p>From this, we know the imbalanced islander did not change sides, so must be in
+    set ACE.</p>
+    <p><strong>Test 3</strong></p>
+    <p>SEESAW: A -^- C</p>
+    <p>The LEFT half of the seesaw drops toward the ground.</p>
+    <p>From the result of Test 2, we know AC is light or E is heavy. Since this
+    test was not balanced, we know A or C is the imbalanced islander. Since there
+    is no remaining possibility that one of them is heavy, the LEFT half dropping
+    shows us that C is light.</p>
+
+{% endblock %}

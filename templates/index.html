@@ -1,0 +1,31 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+    <h1>Welcome to Skipping Stone Engineering!</h1>
+    <p>
+        This is the personal website of myself, Zachary Stone. I am an embedded software engineer with a background 
+        in electrical engineering. This website will be used to showcase some of the personal projects which I am 
+        often working on.
+    </p>
+
+    <h2>Projects:</h2>
+    <a class="projectLink" href="{{ url_for('solar_thermal_controller') }}">Embedded Solar Thermal Controller</a>
+    <a class="projectLink" href="{{ url_for('seesaw_island_riddle') }}">Seesaw Island Riddle</a>
+    <a class="projectLink" href="{{ url_for('bottle_cap_imager') }}">Bottle Cap Imager</a>
+    <!-- <a href="">
+        <h3>3 Band Equalizer</h3>
+    </a>
+    <a href="">
+        <h3>Hip Belt Buckle</h3>
+    </a>
+    <a href="">
+        <h3>Custom Slim Wallet</h3>
+    </a>
+    <a href="">
+        <h3>Rowboat</h3>
+    </a>
+    <a href="">
+        <h3>Variable Pole Count Induction Motor</h3>
+    </a> -->
+{% endblock %}
