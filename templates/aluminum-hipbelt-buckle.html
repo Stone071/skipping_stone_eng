@@ -9,7 +9,19 @@
         <!-- <a class="repoLink" href="https://github.com/Stone071/solarthermal_control">Repository</a> -->
     </div>
 
-    <h2>Background</h2>
+    <div>
+        <h2>Table of Contents</h2>
+        <ul class="tableOfContents">
+            <li><a href="#background">Background</a></li>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#design-overview">Design Overview</a></li>
+            <li><a href="#manufacturing">Manufacturing</a></li>
+            <li><a href="#usage">Usage</a></li>
+            <li><a href="#improvements">Improvements</a></li>
+        </ul>
+    </div>
+
+    <h2 id="background">Background</h2>
     <p>
         A few years ago, the hip belt buckle on my girlfriend's hiking bag broke. I had just bought a 3d printer, and was
         having loads of fun learning to design things in FreeCAD. I figured I could iterative design my way to the
@@ -19,7 +31,7 @@
         <img width="60%" src="{{ url_for('static', filename='together_buckle.jpeg') }}""/>
     </div>
 
-    <h2>Objective</h2>
+    <h2 id="objective">Objective</h2>
     <p>
         The buckle needed to achieve several things.
         <ol>
@@ -31,7 +43,7 @@
         </ol>
     </p>
 
-    <h2>Design Overview</h2>
+    <h2 id="design-overview">Design Overview</h2>
     <p>
         Given requirement (1.) and the other kinds of projects I was working on at the time,
         I quickly decided that the best approach for me would be to design something which would be composed
@@ -66,7 +78,7 @@
         position one of stability, requiring intentional energy input to rotate the buckle out of the locked state.
     </p>
 
-    <h2>Manufacturing</h2>
+    <h2 id="manufacturing">Manufacturing</h2>
     <p>
         I used .040" (1.016mm) 5052 aluminum for this project since it lends itself so well to bending. The aluminum was all
         laser cut by SendCutSend, and bent into shape by me. The hand tools which are used to
@@ -126,7 +138,7 @@
         is at least 10x what it costs to manufacture a plastic hip belt buckle, but that wasn't the point of this.
     </p>
 
-    <h2>Usage</h2>
+    <h2 id="usage">Usage</h2>
     <p>
         I think the buckle achieves requirement (4.) of being easy to use. It doesn't have the same one-handed
         quick-release ability as a typical hip belt buckle, but putting it together and taking it apart is one
@@ -152,7 +164,7 @@
         </div>
     </p>
 
-    <h2>Improvements</h2>
+    <h2 id="improvements">Improvements</h2>
     <p>
         Like most things I made, this will never truly be done for me. The remaining element which I don't
         feel satisfied with is my ladder-lock solution. I don't feel it has the same smooth action as a normal

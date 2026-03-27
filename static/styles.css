@@ -97,12 +97,13 @@ a:hover, a:focus {
     margin-bottom: 1rem;
 }
 
-/* Style the tables */
+/* Style the tables or lists*/
 table, th, td {
     border: 1px solid;
 }
-.emptyBox {
-    background-color: #000;
+.tableOfContents {
+    font-style: italic;
+    font-size: 1.2rem;
 }
 
 /* Some Images */
