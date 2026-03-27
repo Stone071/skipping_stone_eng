@@ -27,3 +27,7 @@ def seesaw_island_riddle():
 @app.route("/bottle-cap-imager")
 def bottle_cap_imager():
     return render_template("bottle-cap-imager.html")
+
+@app.route("/hip-belt-buckle")
+def hip_belt_buckle():
+    return render_template("aluminum-hipbelt-buckle.html")

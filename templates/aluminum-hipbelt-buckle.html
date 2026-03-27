@@ -1,0 +1,164 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+
+    <div class="projectHead">
+        <h1>Aluminum Hip Belt Buckle</h1>
+        <p>A simple-to-manufacture hard-wearing hip belt buckle to replace plastic junk.</p>
+        <!-- <a class="repoLink" href="https://github.com/Stone071/solarthermal_control">Repository</a> -->
+    </div>
+
+    <h2>Background</h2>
+    <p>
+        A few years ago, the hip belt buckle on my girlfriend's hiking bag broke. I had just bought a 3d printer, and was
+        having loads of fun learning to design things in FreeCAD. I figured I could iterative design my way to the
+        perfect buckle in no time! I was wrong about how long it would take, and it's not perfect, but it was fun.
+    </p>
+    <div style="display: flex; justify-content: center;">
+        <img width="60%" src="{{ url_for('static', filename='together_buckle.jpeg') }}""/>
+    </div>
+
+    <h2>Objective</h2>
+    <p>
+        The buckle needed to achieve several things.
+        <ol>
+            <li>The buckle must not be plastic, so that it can be properly recycled if/when it breaks.</li>
+            <li>The buckle must maintain a stable connection even in the absence of tension across the buckle.</li>
+            <li>The buckle should be composed of as few parts as possible.</li>
+            <li>The buckle should be easy to use, like any other buckle.</li>
+            <li>Creating the buckle must not cause me to buy additional tools.</li>
+        </ol>
+    </p>
+
+    <h2>Design Overview</h2>
+    <p>
+        Given requirement (1.) and the other kinds of projects I was working on at the time,
+        I quickly decided that the best approach for me would be to design something which would be composed
+        of discrete sheet metal parts.
+    </p>
+    <p>
+        In pursuit of requirement (3.), I scrapped the idea of creating a 3 dimensional assembly by stacking
+        sheet metal layers. This would be expensive, and I was mostly interested in approaching this as a 
+        problem to be solved by novel geometry.
+    </p>
+    <p>
+        Requirement (2.) suggests to me that the movement which the user executes to combine the two halves
+        of the buckle should NOT be in or opposite the direction of tension, but along some other vector entirely.
+        With this in mind, I decided the two halves of the buckle should rotate against each other to combine.
+    </p>
+    <p>
+        The design which arose out of these ideas is two basic shapes cut out of sheet metal. One half remains
+        a flat sheet which is approximately a circle, and the other half is approximately a Y shape which
+        has three prongs that get bent up to capture the edges of the flat circular half and hold it in 
+        place. As the prongs are not capable of moving, a particular pattern of slots is cut into the flat circular
+        half which allows the circular half to be captured by and removed from the prongs through a translation and rotation.
+    </p>
+    <div style="display: flex; justify-content: center;">
+        <img width="40%" src="{{ url_for('static', filename='flat_half.jpeg') }}"/>
+        <img width="40%" src="{{ url_for('static', filename='bent_half.jpeg') }}"/>
+    </div>
+    <p>
+        To prevent the buckle coming apart accidentally, the three prongs are bent slightly narrower than the thickness of the
+        flat circular piece. This causes them to act as springs when the flat half is inserted. Through this slight springing, 
+        a downward pressure is applied from the prongs onto the flat half, providing friction which resists accidental rotation. 
+        Additionally, the points of the prongs settle into small grooves in the flat circular piece, making the the locked 
+        position one of stability, requiring intentional energy input to rotate the buckle out of the locked state.
+    </p>
+
+    <h2>Manufacturing</h2>
+    <p>
+        I used .040" (1.016mm) 5052 aluminum for this project since it lends itself so well to bending. The aluminum was all
+        laser cut by SendCutSend, and bent into shape by me. The hand tools which are used to
+        bend the sheet metal are all of a custom design, and are composed of layers which are bolted
+        together. The assemblies are part 3d printed, part sheet metal for reinforcement.
+    </p>
+    <div style="display: flex; justify-content: center; align-items: stretch;">
+        <figure style="width: 45%;" >
+            <img width="100%" src="{{ url_for('static', filename='old_bender.jpeg') }}"/>
+            <figcaption>An early design of the prong bender.</figcaption>
+        </figure>
+        <figure style="width: 45%;" >
+            <img width="100%" src="{{ url_for('static', filename='newer_bender.jpeg') }}"/>
+            <figcaption>
+                A later design of the bender half which actually bends the prongs, using a leg to provide
+                a positive stop point and make the bend depth precise and consistent.
+            </figcaption>
+        </figure>
+    </div>
+    <p>
+        To use the hand tool, a prong is set into the neck of the tool, passing under the long bolt which acts as the pivot point
+        and fixes the inside radius of the bend. The two halves of the tool are then brought together, and the prong is forced to
+        bend around the center bolt. Each of the three prongs can be bent on the same tool, and there are locating tabs on the tool
+        to keep the sheet metal in position as it is being bent.
+    </p>
+
+
+    <h3>Cost</h3>
+    <table align="center">
+        <tr>
+            <td><strong>Item</strong></td>
+            <td><strong>Cost Qt. 2</strong></td>
+            <td><strong>Cost Qt. 100</strong></td>
+            <td><strong>Cost Qt. 1000</strong></td>
+        </tr>
+        <tr>
+            <td>Flat Circular Half</td>
+            <td>$2.42</td>
+            <td>$0.95</td>
+            <td>$0.59</td>
+        </tr>
+        <tr>
+            <td>Bent Y Half</td>
+            <td>$1.64</td>
+            <td>$0.64</td>
+            <td>$0.39</td>
+        </tr>
+        <tr>
+            <td><strong>Unit Cost @ Qt.</strong></td>
+            <td>$4.04</td>
+            <td>$1.59</td>
+            <td>$0.98</td>
+        </tr>
+    </table>
+    <p>
+        So in materials the buckle could cost anywhere from $4.04 to $0.98 per unit. I am guessing this lower cost 
+        is at least 10x what it costs to manufacture a plastic hip belt buckle, but that wasn't the point of this.
+    </p>
+
+    <h2>Usage</h2>
+    <p>
+        I think the buckle achieves requirement (4.) of being easy to use. It doesn't have the same one-handed
+        quick-release ability as a typical hip belt buckle, but putting it together and taking it apart is one
+        fluid motion that just as natural as any other hip belt buckle after a few minutes wearing it.
+    </p>
+    <p>
+        Putting it together is 4 steps.
+        <ol>
+            <li>Bring the flat piece over the bent piece, such that the single prong falls into the slot carved
+                into the middle of the flat piece.
+            </li>
+            <li>Angle both pieces so the slot in the flat piece is in line with the prong which is now inside it.</li>
+            <li>Slide the two halves together until the prong hits reaches the end of the slot.</li>
+            <li>Rotate the two halves so the prong moves to the end of the curved slot, and the two side
+                prongs come to rest in the small slots carved into the flat piece.
+            </li>
+        </ol>
+        <div style="display: flex; justify-content: center;">
+            <img width="22%" src="{{ url_for('static', filename='unbuckled_buckle.jpeg') }}"/>
+            <img width="22%" src="{{ url_for('static', filename='first_stage_buckle.jpeg') }}"/>
+            <img width="22%" src="{{ url_for('static', filename='half_buckled_buckle.jpeg') }}"/>
+            <img width="22%" src="{{ url_for('static', filename='fully_buckled_buckle.jpeg') }}"/>
+        </div>
+    </p>
+
+    <h2>Improvements</h2>
+    <p>
+        Like most things I made, this will never truly be done for me. The remaining element which I don't
+        feel satisfied with is my ladder-lock solution. I don't feel it has the same smooth action as a normal
+        buckle when I am tightening/loosening the webbing on the hip belt. That being said, I've been using
+        the buckle on my hiking bag for close to a year now, and in a practical sense it works just fine.
+    </p>
+
+    
+{% endblock %}
