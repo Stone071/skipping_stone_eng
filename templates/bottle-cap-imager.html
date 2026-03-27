@@ -28,6 +28,12 @@
         but was in need of a project to think about, and the inspiration was immediate. I wanted to write a program to do 
         something similar -- create murals of discrete circular elements from an image.
     </p>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <figure style="width: 50%;">
+            <img src="{{ url_for('static', filename='crescent-city-mural.jpeg') }}" style="width: 100%"/>
+            <figcaption>The mural in Crescent City, CA.</figcaption>
+        </figure>
+    </div>
 
     <h2 id="overview">Overview</h2>
     <p>The goal of transforming an input image into a discrete set of circular "bottle caps" is achieved through a few steps.</p>
@@ -118,8 +124,8 @@
             color reduction.</td>
             <td>There are only 24 unique colors in this image.</td>
         </tr>
-
     </table>
+
     <h3>Gifs</h3>
     <p>Like I said above, I think the gif outputs here are the most interesting.</p>
     <div style="display: flex; justify-content: center;">
