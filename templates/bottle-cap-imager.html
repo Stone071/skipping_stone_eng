@@ -9,7 +9,18 @@
         <a class="repoLink" href="https://github.com/Stone071/bottle_cap_imager">Repository</a>
     </div>
 
-    <h2>Background</h2>
+    <div>
+        <h2>Table of Contents</h2>
+        <ul class="tableOfContents">
+            <li><a href="#background">Background</a></li>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#usage">Usage</a></li>
+            <li><a href="#examples">Examples</a></li>
+            <li><a href="#future-plans">Future Plans</a></li>
+        </ul>
+    </div>
+
+    <h2 id="background">Background</h2>
     <p>
         On a cross-country drive from Connecticut to Seattle, my girlfriend and I found ourselves in Crescent City, CA. 
         We got some coffee and stopped for a walk on the beach, where we ran into an incredible mural of an ocean wave made 
@@ -18,7 +29,7 @@
         something similar -- create murals of discrete circular elements from an image.
     </p>
 
-    <h2>Overview</h2>
+    <h2 id="overview">Overview</h2>
     <p>The goal of transforming an input image into a discrete set of circular "bottle caps" is achieved through a few steps.</p>
     <ol>
         <li>Simplify the coloration of the image. There may be hundreds or thousands of unique colors in an image. 
@@ -37,10 +48,10 @@
         fading in and out of abstract forms. In my opinion this is the most interesting output of the program.
     </p>
 
-    <h2>Usage</h2>
+    <h2 id="usage">Usage</h2>
     <p>Please refer to the README in the repository linked above for information on using this program.</p>
 
-    <h2>Example Inputs and Outputs</h2>
+    <h2 id="examples">Example Inputs and Outputs</h2>
     <h3>Images</h3>
     <table>
         <colgroup>
@@ -121,7 +132,7 @@
         <img src="{{ url_for('static', filename='grand-budapest-hotel-lobby.gif') }}" style="width: 50%"/>
     </div>
             
-    <h3>Future Plans</h3>
+    <h2 id="future-plans">Future Plans</h3>
     <p>I'm not quite done with this project. I've tried doing a bit of video rendering with it. I occasionally
     like to study with with nature videos in the background, and I think the idea of a "bottle cap"
     ocean scene with the sounds of waves rolling onto the beach could be pleasing. I also have not actually
