@@ -5,7 +5,7 @@
 
     <div class="projectHead">
         <h1>Bottle Cap Imager</h1>
-        <p>Bottle Cap Imager is a collection of python programs to generate images which could be made out of bottle caps.</p>
+        <p>A collection of python programs to generate images which could be made out of bottle caps.</p>
         <a class="repoLink" href="https://github.com/Stone071/bottle_cap_imager">Repository</a>
     </div>
 
@@ -28,15 +28,21 @@
         but was in need of a project to think about, and the inspiration was immediate. I wanted to write a program to do 
         something similar -- create murals of discrete circular elements from an image.
     </p>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <figure style="width: 50%;">
+            <img src="{{ url_for('static', filename='crescent-city-mural.jpeg') }}" style="width: 100%"/>
+            <figcaption>The mural in Crescent City, CA.</figcaption>
+        </figure>
+    </div>
 
     <h2 id="overview">Overview</h2>
     <p>The goal of transforming an input image into a discrete set of circular "bottle caps" is achieved through a few steps.</p>
     <ol>
-        <li>Simplify the coloration of the image. There may be hundreds or thousands of unique colors in an image. 
+        <li>Simplify the coloration of the image. There may be tens-of-thousands of unique colors in a normal photograph.
             This should be reduced to a couple dozen or fewer for any hope of constructing this image out of bottle caps.
         </li>
         <li>Mask off the pixels between the bottle caps.</li>
-        <li>Ensure that all pixels within the same bottle cap have the same color.</li>
+        <li>Ensure that all pixels within the same bottle cap become the same color.</li>
     </ol>    
     <p>
         Step (1.) is handled by pix_sort.py, and steps (2.) and (3.) are handled by lens_mask.py. To streamline this process, 
@@ -118,8 +124,8 @@
             color reduction.</td>
             <td>There are only 24 unique colors in this image.</td>
         </tr>
-
     </table>
+
     <h3>Gifs</h3>
     <p>Like I said above, I think the gif outputs here are the most interesting.</p>
     <div style="display: flex; justify-content: center;">
@@ -133,11 +139,13 @@
     </div>
             
     <h2 id="future-plans">Future Plans</h3>
-    <p>I'm not quite done with this project. I've tried doing a bit of video rendering with it. I occasionally
-    like to study with with nature videos in the background, and I think the idea of a "bottle cap"
-    ocean scene with the sounds of waves rolling onto the beach could be pleasing. I also have not actually
-    achieved my original goal, which was to use circles of different sizes that could be overlapped, like the
-    original mural I saw. Finally, I think it could be interesting to make a color-by-numbers book using
-    the bottle cap images. I may make a small web app to do this conversion from image to color-by-numbers style
-    output.</p>
+    <p>
+        I'm not quite done with this project. I've tried doing a bit of video rendering with it. I occasionally
+        like to study with with nature videos in the background, and I think the idea of a abstract
+        ocean scene with the sounds of waves rolling onto the beach could be pleasing. I also have not 
+        achieved my original goal, which was to use circles of different sizes that could be overlapped, like the
+        original mural I saw. Finally, I think it could be interesting to make a color-by-numbers book using
+        the bottle cap images. I may make a small web app to do this conversion from image to color-by-numbers style
+        output.
+    </p>
 {% endblock %}
