@@ -17,10 +17,6 @@ main {
     border-radius: 5px; /* Slightly rounded corners */
 }
 /* Flexbox container allows horizontal stacking */
-.container {
-    display: flex;
-    align-items: center;
-}
 .branchBox {
     display: flex;
     align-items: center;
