@@ -9,6 +9,7 @@
 # Zachary Stone, March 2026
 ######################################################
 from flask import Flask, render_template
+import calc
 
 app = Flask(__name__)
 
@@ -31,3 +32,15 @@ def bottle_cap_imager():
 @app.route("/hip-belt-buckle")
 def hip_belt_buckle():
     return render_template("aluminum-hipbelt-buckle.html")
+
+@app.route("/lifetime-investment-calc")
+def lifetime_investment_calc_page():
+    return render_template("lifetime-investment-calc.html")
+
+@app.route('/calculate', methods=['POST'])
+def main_calc():
+    return calc.calculate()
+
+# @app.route('/download')
+# def main_download():
+#     return calc.download_csv()

@@ -21,13 +21,13 @@
 
     <h2 id="background">Background</h2>
     <p>
-        This program is a text-based game which allows the user to play out
-        the seesaw island riddle from Brooklyn 99, paraphrased below.</p>
-        <p><strong>There are 12 people on an island. There is a seesaw on the
+        This program is a text-based game which allows the user to test algorithms
+        for the seesaw island riddle from Brooklyn 99, paraphrased below.</p>
+        <p><b>There are 12 people on an island. There is a seesaw on the
         island. 11 of the people weigh the exact same amount. The other person
         has a slightly different weight. The user must determine who the person
         of unequal weight is using only the seesaw, and the seesaw can only be
-        used 3 times.</strong>
+        used 3 times.</b>
     </p>
     <p>
         I heard the riddle on the show and became a little obsessed with it.
@@ -43,7 +43,7 @@
         <img src="{{ url_for('static', filename='seesaw_riddle_screenshot.png')}}"/>
     </div>
     <p>
-        <strong><em>NOTE: The balance computation does not take into account
+        <b><i>NOTE: The balance computation does not take into account
         the distance of the people from the fulcrum of the seesaw. It is
         computed as if all people present on the seesaw are equidistant from the
         fulcrum. One of my original solutions was dependent on observing the
@@ -51,7 +51,7 @@
         solution to the riddle depended on this, and was told the accepted
         solutions do not. Since the velocity of the seesaw does not matter, the
         exact position of each person does not either, only what side they are
-        on.</em></strong>
+        on.</i></b>
     </p>
 
     <h2 id="build-dependencies">Building the Program</h2>
@@ -79,14 +79,14 @@
     <p>
         Each time you run the game, the special islander is selected at
         random, and the weight difference is random as well.</p>
-        <p><strong><em>NOTE: This program was written on a linux machine, and
+        <p><b><i>NOTE: This program was written on a linux machine, and
         has only been played on Ubuntu and MacOS. The Makefile is not written
         for Windows, and there may be graphical glitches on other operating
-        systems related to clearing the screen.</em></strong>
+        systems related to clearing the screen.</i></b>
     </p>
 
     <h2 id="my-algorithm">My Algorithm</h2>
-    <p>My algorithm is based on a few <strong>ideas</strong></p>
+    <p>My algorithm is based on a few <b>ideas</b></p>
     <ol>
         <li>It is desirable to use more islanders per operation than fewer, 
         but not desirable to use all the islanders in a single operation.</li>
@@ -123,16 +123,16 @@
         The branching logic can be hard to follow without showing results. The following is an example which follows the
         rightmost path in Flowchart 2.
     </p>
-    <p><strong>Test 1</strong></p>
+    <p><b>Test 1</b></p>
     <p>SEESAW: ABCD -^- EFGH</p>
     <p>The RIGHT half of the seesaw drops toward the ground.</p>
     <p>From this, we know the imbalanced islander is in the set ABCDEFGH.</p>
-    <p><strong>Test 2</strong></p>
+    <p><b>Test 2</b></p>
     <p>SEESAW: AFC -^- EBI</p>
     <p>The RIGHT half of the seesaw drops toward the ground.</p>
     <p>From this, we know the imbalanced islander did not change sides, so must be in
     set ACE.</p>
-    <p><strong>Test 3</strong></p>
+    <p><b>Test 3</b></p>
     <p>SEESAW: A -^- C</p>
     <p>The LEFT half of the seesaw drops toward the ground.</p>
     <p>

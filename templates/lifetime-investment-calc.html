@@ -1,0 +1,138 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+  <!-- JS for chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <div class="projectHead">
+    <h1>Lifetime Investment Calculator</h1>
+    <p>A multi-era investment calculator for the different stages of your life.</p>
+    <a class="repoLink" href="https://github.com/Stone071/skipping_stone_eng">Repository</a>
+  </div>
+
+  <h2>Background</h2>
+  <p>
+    This calculator was built around the time I got my first real job and needed to set up a reasonable budget.
+    I wasn't used to having discretionary funds, and knew I needed to make some decisions about how much to save 
+    and invest. It seemed reasonable to me that my investment and expenditure habits were going to change over 
+    time, and I wanted to be able to quickly illustrate what the outcome of those different periods would be.
+  </p>
+  <div class="form-section">
+    <h2>How to Use</h2>
+    <p class="general_text" id="how_to_use">
+      This calculator allows you specify subsequent periods of investment (and expenditure) 
+      which differ from each other. Many calculators allow you to input one set of parameters and view the growth of 
+      the investment over time, but few allow you to display changes in investing strategy over time. 
+    </p>
+    <p>
+      For example, in the beginning of your investing journey you may experiment with higher volatility, and 
+      average a return of 10% per year over the course of 25 years. You may then change your strategy to invest more 
+      safely for 5 years, returning an average of 8% each year. You may then decide to retire, moving your money into 
+      more guaranteed accounts which return less, maybe 4.5% annually, while at the same time withdrawing money each 
+      month to live off of. This calculator allows you to input each of those, and see what the outcome will be.
+    </p>
+    <button id="example_button">Input this example</button>
+</div>
+
+  <div class="form-section">
+    <h2>Investment Parameters</h2>
+    <label for="principal">Initial Investment ($):</label>
+    <input type="number" step="100" id="principal" value="500" max=10000000 required>
+
+    <label for="num_eras">Number of Eras:</label>
+    <input type="number" min="1" value="1" max="6" id="num_eras" required>
+
+    <div id="eras_container" class="eras-container"></div>
+  </div>
+
+  <div class="form-section">
+    <h2>Balance Over Time</h2>
+    <canvas id="chart" height="100"></canvas>
+    <p class="money_report" id="summary"></p>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+  <style>
+    /* INPUTS */
+    input {
+        padding: 0.6rem;
+        font-size: 1rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 0.3rem;
+        background-color: #fff;
+        color: #333;
+    }
+
+    /* BUTTONS */
+    button {
+        padding: 0.6rem;
+        font-size: 1rem;
+        border-radius: 6px;
+        border: none;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 0.3rem;
+        background-color: #007bff;
+        color: white;
+        opacity: 0.9;
+        cursor: pointer;
+    }
+
+    button:hover {
+        opacity: 1;
+        background-color: #0056b3;
+    }
+
+    /* LABELS */
+    label {
+        margin-top: 1rem;
+        display: block;
+    }
+
+    /* GRID */
+    .eras-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    /* CARDS */
+    .era-box {
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+
+    /* SLIDER */
+    .freq_sel {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 25px;
+        background: #ddd;
+        outline: none;
+        opacity: 0.8;
+        transition: opacity .2s;
+        border-radius: 5px;
+    }
+
+    .freq_sel:hover {
+        opacity: 1;
+    }
+
+    /* OUTPUT TEXT */
+    .money_report {
+        font-size: large;
+        font-weight: bold;
+        color: #000;
+    }
+  </style>
+
+{% endblock %}
