@@ -41,6 +41,10 @@ def lifetime_investment_calc_page():
 def main_calc():
     return calc.calculate()
 
+@app.route("/multiple-feedback-bandpass-filter")
+def multiple_feedback_bandpass_filter():
+    return render_template("multiple-feedback-bandpass-filter.html")
+
 # @app.route('/download')
 # def main_download():
 #     return calc.download_csv()

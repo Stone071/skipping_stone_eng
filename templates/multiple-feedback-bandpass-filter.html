@@ -1,0 +1,311 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+    <div class="projectHead">
+        <h1>Audio Bandpass Filter</h1>
+        <p>Revising an old design from class.</p>
+        <!-- <a class="repoLink" href="https://github.com/Stone071/bottle_cap_imager">Repository</a> -->
+        <figure>
+            <img src="{{url_for('static',filename='three-channel-equalizer-lab-design.png')}}" width="100%"/>
+            <figcaption>
+                The original design from lab, implemented using second-order multiple-feedback bandpass filter
+                for bandwidth selection, resistive amplifier for gain requirement, and summing amplifier for
+                recombination of the three signals.
+            </figcaption>
+        </figure>
+    </div>
+
+    <div>
+        <h2>Table of Contents</h2>
+        <ul class="tableOfContents">
+            <li><a href="#background">Background</a></li>
+            <li><a href="#requirements">Requirements</a></li>
+            <li><a href="#design">Design</a></li>
+            <li><a href="#further-improvements">Further Improvements</a></li>
+            <!-- <li><a href="#bandpass-transfer-derivation">Appendix A: Derivation of MFB Amplifier Transfer Function</a></li> -->
+        </ul>
+    </div>
+
+    <h2 id="background">Background</h2>
+    <p>
+        A lab project we performed early in undergrad was implementing a 3 band audio equalizer. We were advised to use a
+        multiple-feedback bandpass filter for at least one stage of the amplifier, and given specifications in the form of center
+        frequency, quality factor, and gain for each channel.
+    </p>
+    <p>
+        That lab flew by, and I was so floored when the equalizer worked that I didn't stop to question some aspects of its
+        performance which could have been much better.
+        Here, I'll be taking a closer look at the most interesting portion of the equalizer which we designed, which
+        is the bandpass filter. <b>I'll be revising the design in favor of cascaded high-pass and low-pass filters, and making
+        it clear why.</b>
+    </p>
+
+    <h2 id="requirements">Requirements</h2>
+    <div> 
+        <h3 style="margin-top: 0;">The Given Specifications</h3>
+        <table align="center">
+            <th>
+                <td><b>Center Frequency</b></td>
+                <td><b>Quality Factor</b></td>
+                <td><b>Gain</b></td>
+            </th>
+            <tr>
+                <td><b>Bass</b></td>
+                <td>200 Hz +- 10%</td>
+                <td>0.7 +- 10%</td>
+                <td>0.4 - 8</td>
+            </tr>
+            <tr>
+                <td><b>Mid</b></td>
+                <td>1100 Hz +- 10%</td>
+                <td>0.7 +- 10%</td>
+                <td>0.2 - 4</td>
+            </tr>
+            <tr>
+                <td><b>Treble</b></td>
+                <td>6000 Hz +- 10%</td>
+                <td>0.7 +- 10%</td>
+                <td>0.1 - 2</td>
+            </tr>
+        </table>
+        <p>
+            The center frequency and gain are intuitive requirements. Each channel must target a specific passband of frequencies, 
+            and the gain needs to be adjustable so the user can notice the difference. The quality factor given was not immediately
+            intuitive. Quality factor is a measure how much a system damps oscillations. A system with a low quality factor (Q < 1/2)
+            is overdamped, and will not oscillate. A system with a high quality factor (Q > 1/2) is underdamped, and will oscillate when
+            excited by a specific frequency, and will continue oscillating longer depending on how high the quality factor is. A system 
+            Quality factor Q = 1/2 is critically damped, and will not oscillate, but also remains quickly responsive to sharp inputs.
+            In a bandpass filter, quality factor has an effect on bandwidth as well, with high quality factors producing a more narrowband,
+            peaked response. By selecting 0.7 as the quality factor, we were attempting to produce a flatter response in the passband, and
+            not have a strong peak at the center frequency.
+        </p>
+    </div>
+
+    <div>
+        <h3>The Missed Requirement</h3>
+        <figure style="float: right;">
+            <img src="{{url_for('static',filename='freq-rsp-equalizer.png')}}"/>
+            <figcaption>
+            Output from original circuit pictured at the top of the page.
+            </figcaption>
+        </figure>
+        <p>
+            When designing for audio and many other applications, it is desirable to amplify selected frequencies
+            evenly across the entire bandwidth. You effectively want to take a rectangular window of frequencies
+            and boost them all the same amount. Unfortunately, this is not what was achieved with the equalizer designed in lab.
+            To the right is a frequency response plot from the output of the 3 channel equalizer.
+        </p>
+        <p>                    
+            It is very clear in this frequency response that the frequencies in between the center frequency of each bandpass
+            filter are not being effectively amplified. The amplitude which is achieved at center frequency is not being
+            achieved throughout the passband of each filter. There are a couple things contributing to this. Firstly, the
+            bandpass topology used here is not the best choice. Multiple-feedback bandpass filters are good for high Q, 
+            low bandwidth applications, selectively boosting a very narrow frequency band.</p>
+        </p>
+        <p>
+            More importantly, a second order bandpass filter can never achieve this wide flat response in the passband by the basic 
+            fact that the relationship of the output to the input has a second-order expression in the denominator. 
+            Anyone can see this by just graphing any second order function.
+        </p>
+        <div style="display:flex; justify-content: center;">
+        <figure>
+            <iframe src="https://www.desmos.com/calculator/neifeiivwb?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+            <figcaption>
+                A plot of y = 1/(ax<sup>2</sup> + bx + c)
+            </figcaption>
+        </figure>
+        </div>
+        <p>
+            We can pretend in this plot that frequency is on the x axis, and filter response is on the y axis. The truth is that
+            the response of a second order bandpass filter will always look quite parabolic. It is a fundamental characteristic of 
+            the design. The actual transfer function for the topology implemented is 
+            (R<sub>2</sub>Cs)/(C<sup>2</sup>R<sub>2</sub>R<sub>1</sub>s<sup>2</sup> + 2CR<sub>1</sub>s + 1). The derivation can be found 
+            in <a href="#bandpass-transfer-derivation">Appendix A.</a>
+        </p>
+    </div>
+
+    <h2 id="design">Design</h2>
+    <h3>Old</h3>
+    <p>
+        The old design was a second order multiple-feedback bandpass filter. As discussed above, it cannot achieve the flat response across the
+        passband which we desire.
+    </p>
+    <h3>New</h3>
+    <p>
+        A very simple solution for creating a passband of any width while having a flat response in the middle frequencies
+        is to cascade a high-pass and a low-pass filter together. The high-pass removes low frequencies, the low-pass removes
+        high frequencies, and we are left with a window of unchanged response in the middle. This concept is illustrated simply
+        by these three plots below.
+    </p>
+    <div style="display: flex; justify-content: center;">
+        <figure>
+            <iframe src="https://www.desmos.com/calculator/exsdldqzgl?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+            <figcaption>A first order low pass filter of H1=1/(ax+b) where a=1 and b=-10.</figcaption>
+        </figure>
+        <figure>
+            <iframe src="https://www.desmos.com/calculator/dfmxl3qnpa?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+            <figcaption>A first order high pass filter of H2=1/(ux+w) where u=-3 and b=10.</figcaption>
+        </figure>
+    </div>
+    <div style="display: flex; justify-content: center;">
+        <figure>
+            <iframe src="https://www.desmos.com/calculator/oxrxsjrs7s?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+            <figcaption>The composite filter, where the output of one feeds into the other.</figcaption>
+        </figure>
+    </div>
+    <p>
+        In the final plot, one can see that that by combining the left region of the left plot and the right region of the right plot,
+        we have created a zone in the middle where they overlap. This middle zone is the passband. For now, we'll consider simpler
+        better, and pursue this idea with some first order high and low pass filters.
+    </p>
+
+    <h3>Circuit Layout</h3>
+    <figure width="100%" style="max-width: 100%;">
+        <img width="100%" src="{{url_for('static', filename='cascaded-hi-low-first-order.png')}}"/>
+        <figcaption>The circuit diagram for a cascade of first order high-pass and low-pass active filters.</figcaption>
+    </figure>
+
+    <h3>Topology</h3>
+    <p>
+        The topology being employed here is very simple. In the lowpass filter, placing a capacitor in the feedback path causes
+        the impedance seen by the feedback to be reduced as frequency increases, thus causing more feedback and reducing gain.
+        For the highpass filter, the capacitor in the signal path to the input poses high impedance at low frequency, effectively blocking
+        low frequencies.
+    </p>
+
+    <h3>Design Equations</h3>
+    <p>
+        The low-pass filter has a transfer function of
+        -(R<sub>2</sub>/R<sub>1</sub>)(1/sR<sub>2</sub>C+1).
+        The derivation of this can be found in the appendix.
+    </p>
+    <p>
+        This transfer function tells us some things implicitly. We can see that the passband has a gain of -(R<sub>2</sub>/R<sub>1</sub>).
+        We can also see that the first order pole will exist when sR<sub>2</sub>C = -1. This is our cut off frequency.
+    </p>
+    <p>F<sub>o</sub> = 1/(2piR<sub>2</sub>C)</p>
+    <p>In order to make a capacitor selection for a given cut off frequency, this equation should be solved for C.</p>
+    <p>C = 1/(2piR<sub>2</sub>F<sub>o</sub>)</p>
+    <p>
+        The high-pass filter has a transfer function of
+        (-R<sub>f</sub>/R<sub>1</sub>)(sCR<sub>1</sub>/sCR<sub>1</sub>+1).
+        The derivation of this can be found in the appendix.
+    </p>
+    <p>
+        Like the low-pass filter, this function tells us the passband gain is (-R<sub>f</sub>/R<sub>1</sub>),
+        and the F<sub>o</sub> = 1/(2piR<sub>1</sub>C).
+    </p>
+
+    <h3>Component Selection</h3>
+    <p>
+        In this instance, I chose common resistor values such that
+        gain was unity, and allowed the capacitory values to dictate the cut off frequency. If this design were to be produced, it would
+        be worth it to find a combination of common R and C values which achieve the desired cut off frequency.
+    </p>
+    <table align="center">
+        <th>
+            <td><b>Bass Channel</b></td>
+            <td><b>Mid Channel</b></td>
+            <td><b>High Channel</b></td>
+        </th>
+        <tr>
+            <td><b>Low (Hz)</b></td>
+            <td>0</td>
+            <td>300</td>
+            <td>3000</td>
+        </tr>
+        <tr>
+            <td><b>High (Hz)</b></td>
+            <td>300</td>
+            <td>3000</td>
+            <td>20000</td>
+        </tr>
+        <tr>
+            <td><b>R1</b></td>
+            <td>10.1k</td>
+            <td>10.1k</td>
+            <td>10.1k</td>
+        </tr>
+        <tr>
+            <td><b>R2</b></td>
+            <td>10.1k</td>
+            <td>10.1k</td>
+            <td>10.1k</td>
+        </tr>
+        <tr>
+            <td><b>Low Pass F<sub>o</sub></b></td>
+            <td>300</td>
+            <td>3000</td>
+            <td>20000</td>
+        </tr>
+        <tr>
+            <td><b>Low Pass Capacitor</b></td>
+            <td>5.25E-08</td>
+            <td>5.25E-09</td>
+            <td>7.88E-10</td>
+        </tr>
+        <tr>
+            <td><b>High Pass F<sub>o</sub></b></td>
+            <td>none</td>
+            <td>300</td>
+            <td>3000</td>
+        </tr>
+        <tr>
+            <td><b>High Pass Capacitor</b></td>
+            <td>none</td>
+            <td>5.25E-08</td>
+            <td>7.88E-09</td>
+        </tr>
+    </table>
+
+    <h3>Simulation</h3>
+    <p>
+        The simulation quickly revealed something disappointing, which is that the passbands of these filters really are very narrow,
+        so narrow in fact that the sloping shoulder of each filter meets in the middle, and produces the same peak amplitude in the
+        middle of the passband, with amplitude reducing immediately on leaving the middle of the passband. This can be seen below using
+        the component values for the high channel.
+    </p>
+    <div style="display:flex; justify-content: center;">
+        <figure>
+            <img src="{{url_for('static',filename='peaky-passband.png')}}">
+            <figcaption>An prominent peak in the passband.</figcaption>
+        </figure>
+    </div>
+    <p>
+        In order to really see the flat passband of these cascaded filters, the bandwidth of must be much wider. See below,
+        where bandwidth is almost 300 kHz.
+    </p>
+    <div style="display:flex; justify-content: center;">
+        <figure>
+            <img src="{{url_for('static',filename='flat-passband.png')}}">
+            <figcaption>A flatter response in the passband.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="further-improvements">Further Improvements</h2>
+    <p>
+        I retract what I said about this being much better accomplished with cascading first order filters.
+        The first order filters have a -20dB/decade slope, which turns out to be far too shallow for making effective audio filters. 
+        0-200Hz, 300-3000Hz, and even 3000-20000Hz are quite narrow passbands, and if we want these
+        three passbands to have a flatter response across the  curve while not overlapping in a significant way,
+        we need to use a higher order filter to have a sharper drop in gain at the cutoff frequencies.
+    </p>
+    <p>
+        One thing that is still good about the choice to use cascaded high and low-pass filters rather than a
+        monolithic band-pass filter is that there is more control able to be exercised over the parameters dictating
+        the specific response at each end of the passband, due to component value changes controlling the low corner
+        frequency not affecting the filter controlling the high corner frequency, and vice versa. Of course, more
+        components costs more money.
+    </p>
+
+    <h2 id="bandpass-transfer-derivation">Appendix A: Derivation of MFB Amplifier Transfer Function</h2>
+    <p>Working on LaTeX... Come back soon!</p>
+    <!-- <p>
+        When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+        \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
+    </p> -->
+
+{% endblock %}
