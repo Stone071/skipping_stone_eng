@@ -25,7 +25,7 @@
             <li><a href="#requirements">Requirements</a></li>
             <li><a href="#design">Design</a></li>
             <li><a href="#further-improvements">Further Improvements</a></li>
-            <!-- <li><a href="#bandpass-transfer-derivation">Appendix A: Derivation of MFB Amplifier Transfer Function</a></li> -->
+            <li><a href="#equation-derivations">Appendix A: Solutions for Transfer Functions and System Characteristics</a></li>
         </ul>
     </div>
 
@@ -114,7 +114,7 @@
         <figure>
             <iframe src="https://www.desmos.com/calculator/neifeiivwb?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
             <figcaption>
-                A plot of y = 1/(ax<sup>2</sup> + bx + c)
+                A plot of y = 1 / (ax<sup>2</sup> + bx + c)
             </figcaption>
         </figure>
         </div>
@@ -122,8 +122,9 @@
             We can pretend in this plot that frequency is on the x axis, and filter response is on the y axis. The truth is that
             the response of a second order bandpass filter will always look quite parabolic. It is a fundamental characteristic of 
             the design. The actual transfer function for the topology implemented is 
-            (R<sub>2</sub>Cs)/(C<sup>2</sup>R<sub>2</sub>R<sub>1</sub>s<sup>2</sup> + 2CR<sub>1</sub>s + 1). The derivation can be found 
-            in <a href="#bandpass-transfer-derivation">Appendix A.</a>
+            <p class="equation">\(\frac{\left(-1\right) C R_{2} s}{\left(R_{1} C s 2 + R_{1} R_{2} C^{2} s^{2}\right) + 1} = \frac{V_{out}}{V_{in}}\)</p>
+            <!-- (R<sub>2</sub>Cs)/(C<sup>2</sup>R<sub>2</sub>R<sub>1</sub>s<sup>2</sup> + 2CR<sub>1</sub>s + 1).  -->
+            The derivation can be found in <a href="#equation-derivations">Appendix A.</a>
         </p>
     </div>
 
@@ -143,11 +144,11 @@
     <div style="display: flex; justify-content: center;">
         <figure>
             <iframe src="https://www.desmos.com/calculator/exsdldqzgl?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
-            <figcaption>A first order low pass filter of H1=1/(ax+b) where a=1 and b=-10.</figcaption>
+            <figcaption>A first order low pass filter of H<sub>1</sub> = 1 / (ax+b) where a = 1 and b = -10.</figcaption>
         </figure>
         <figure>
             <iframe src="https://www.desmos.com/calculator/dfmxl3qnpa?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
-            <figcaption>A first order high pass filter of H2=1/(ux+w) where u=-3 and b=10.</figcaption>
+            <figcaption>A first order high pass filter of H<sub>2</sub> = 1 / (ux+w) where u = -3 and b = 10.</figcaption>
         </figure>
     </div>
     <div style="display: flex; justify-content: center;">
@@ -179,24 +180,31 @@
     <h3>Design Equations</h3>
     <p>
         The low-pass filter has a transfer function of
-        -(R<sub>2</sub>/R<sub>1</sub>)(1/sR<sub>2</sub>C+1).
-        The derivation of this can be found in the appendix.
+        <p class="equation">\( -\frac{R_2}{R_1}\ \frac{1}{s R_2 C + 1} = \frac{V_{out}}{V_{in}} \)</p>
+        The derivation of this can be found in <a href="#equation-derivations">Appendix A.</a>
     </p>
     <p>
         This transfer function tells us some things implicitly. We can see that the passband has a gain of -(R<sub>2</sub>/R<sub>1</sub>).
         We can also see that the first order pole will exist when sR<sub>2</sub>C = -1. This is our cut off frequency.
     </p>
-    <p>F<sub>o</sub> = 1/(2piR<sub>2</sub>C)</p>
+    <p class="equation">\(\frac{1}{C 2 \pi R_{2}} = F_{o}\)</p>
+    <!-- <p>F<sub>o</sub> = 1/(2piR<sub>2</sub>C)</p> -->
     <p>In order to make a capacitor selection for a given cut off frequency, this equation should be solved for C.</p>
-    <p>C = 1/(2piR<sub>2</sub>F<sub>o</sub>)</p>
+    <!-- <p>C = 1/(2piR<sub>2</sub>F<sub>o</sub>)</p> -->
+    <p class="equation">\(\frac{1}{F_o 2 \pi R_{2}} = C\)</p>
     <p>
         The high-pass filter has a transfer function of
-        (-R<sub>f</sub>/R<sub>1</sub>)(sCR<sub>1</sub>/sCR<sub>1</sub>+1).
-        The derivation of this can be found in the appendix.
+        <p class="equation">\(- \frac{R_{2}}{R_{1}} \frac{R_{1} C s}{R_{1} C s + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <!-- (-R<sub>f</sub>/R<sub>1</sub>)(sCR<sub>1</sub>/sCR<sub>1</sub>+1). -->
+        The derivation of this can be found in <a href="#equation-derivations">Appendix A.</a>
     </p>
     <p>
-        Like the low-pass filter, this function tells us the passband gain is (-R<sub>f</sub>/R<sub>1</sub>),
-        and the F<sub>o</sub> = 1/(2piR<sub>1</sub>C).
+        Like the low-pass filter, this function tells us the passband gain is 
+        <p class="equation">\(- \frac{R_{2}}{R_{1}} = H_{o}\)</p>
+        <!-- (-R<sub>f</sub>/R<sub>1</sub>), -->
+        and the cut-off frequency is 
+        <p class="equation">\(\frac{1}{C 2 \pi R_{1}} = F_{o}\)</p>
+        <!-- F<sub>o</sub> = 1/(2piR<sub>1</sub>C). -->
     </p>
 
     <h3>Component Selection</h3>
@@ -301,11 +309,69 @@
         components costs more money.
     </p>
 
-    <h2 id="bandpass-transfer-derivation">Appendix A: Derivation of MFB Amplifier Transfer Function</h2>
-    <p>Working on LaTeX... Come back soon!</p>
-    <!-- <p>
-        When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
-        \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
-    </p> -->
+    <h2 id="equation-derivations">Appendix A: Solutions for Transfer Functions and System Characteristics</h2>
+    <div align="center">  
+        <p><i>NOTE: Sympy python library likes to make its precedence clear through adding many layers of     parenthesis. While it's not the exact way I wrote these equations, the math is still correct.</i></p>
+        <h3>Multiple Feedback Bandpass Filter</h3>
+        <p>Node Voltage Method</p>
+        <p>Node 1, between R<sub>1</sub> and C</p>
+        <p>\(\frac{V_{1}}{\frac{1}{C s}} + \left(\frac{V_{1} - V_{out}}{\frac{1}{C s}} + \frac{V_{1} - V_{in}}{R_{1}}\right) = 0\)</p>
+        <p>\(C V_{1} s + \left(- C V_{out} s + \left(C V_{1} s + \left(\frac{V_{1}}{R_{1}} - \frac{V_{in}}{R_{1}}\right)\right)\right) = 0\)</p>
+        <p>Node 2, at the inverting input</p>
+        <p>\(- \frac{V_{1}}{C \frac{1}{s}} - \frac{V_{out}}{R_{2}} = 0\)</p>
+        <p>\(- C V_{1} s - \frac{V_{out}}{R_{2}} = 0\)</p>
+        <p>\(\left[ - \frac{V_{out}}{C R_{2} s}\right] = V_{1}\)</p>
+        <p>Substituting Node 2 equation into Node 1 equation</p>
+        <p>\(\left(- C V_{out} s - - (\left(- \frac{V_{in}}{R_{1}} - \frac{V_{out} \frac{1}{C R_{2} s}}{R_{1}}\right) - \frac{C V_{out} s}{C R_{2} s})\right) - \frac{C V_{out} s}{C R_{2} s} = 0\)</p>
+        <p>\(- C V_{out} s + \left(\left(\frac{\left(-1\right) V_{out}}{C s R_{1} R_{2}} - \frac{V_{in}}{R_{1}}\right) - \frac{2 V_{out}}{R_{2}}\right) = 0\)</p>
+        <p>\(- V_{out} \left(C s + \left(\frac{1}{C s R_{1} R_{2}} + \frac{2}{R_{2}}\right)\right) = \frac{V_{in}}{R_{1}}\)</p>
+        <p>\(- V_{out} \left(C R_{1} s + \left(\frac{R_{1}}{C s R_{1} R_{2}} + \frac{2 R_{1}}{R_{2}}\right)\right) = V_{in}\)</p>
+        <p>\(- V_{out} \left(\left(\frac{C 2 R_{1} s}{C R_{2} s} + \frac{1}{C R_{2} s}\right) + \frac{C^{2} s^{2} R_{1} R_{2}}{C R_{2} s}\right) = V_{in}\)</p>
+        <p>Final Transfer Function</p>
+        <p>\(\frac{\left(-1\right) C R_{2} s}{\left(R_{1} C s 2 + R_{1} R_{2} C^{2} s^{2}\right) + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <p>2<sup>nd</sup> order transfer function general form</p>
+        <p>\(\frac{K \omega_{n}^{2}}{\omega_{n}^{2} + \left(s^{2} + s \omega_{n} 2 \zeta\right)} = H\)</p>
+        <p>Placing the transfer function in the general form, we can relate the component values to the characteristics of the second order system.</p>
+        <p>Fundamental Frequency</p>
+        <p>\(\frac{1}{C \sqrt{R_{1} R_{2}}} = \omega_{n}\)</p>
+        <p>Damping Ratio</p>
+        <p>\(\frac{\sqrt{R_{1} R_{2}}}{R_{2}} = \zeta\)</p>
+
+
+        <h3>First Order Highpass Filter</h3>
+        <p>KCL at Inverting Input</p>
+        <p>\(\frac{\left(-1\right) V_{in}}{R_{1} + Z_{c}} - \frac{V_{out}}{R_{2}} = 0\)</p>
+        <p>\(\frac{\left(-1\right) R_{2} V_{in}}{R_{1} + Z_{c}} = V_{out}\)</p>
+        <p>\(\frac{\left(-1\right) R_{2} V_{in}}{R_{1} + \frac{1}{C s}} = V_{out}\)</p>
+        <p>\(\frac{\left(-1\right) C R_{2} s}{C R_{1} s + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <p>\(- \frac{R_{2}}{R_{1}} \frac{C s}{C s + \frac{1}{R_{1}}} = \frac{V_{out}}{V_{in}}\)</p>
+        <p>Final Transfer Function</p>
+        <p>\(- \frac{R_{2}}{R_{1}} \frac{R_{1} C s}{R_{1} C s + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <p>Looking at the transfer function, we can determine the system characteristics in terms of the circuit components.</p>
+        <p>\(- \frac{R_{2}}{R_{1}} \frac{R_{1} C s}{R_{1} C s + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <p>Passband Gain</p>
+        <p>\(- \frac{R_{2}}{R_{1}} = H_{o}\)</p>
+        <p>Cut-off Frequency (pole location)</p>
+        <p>\(\frac{1}{C 2 \pi R_{1}} = F_{o}\)</p>
+
+
+        <h3>First Order Lowpass Filter</h3>
+        <p>KCL at Inverting Input</p>
+        <p>\(- \frac{V_{out}}{R_{2} Z_{c} \frac{1}{R_{2} + Z_{c}}} + \frac{\left(-1\right) V_{in}}{R_{1}} = 0\)</p>
+        <p>\(\frac{V_{out}}{R_{2} Z_{c} \frac{1}{R_{2} + Z_{c}}} = - \frac{V_{in}}{R_{1}}\)</p>
+        <p>\(\frac{V_{out} \left(R_{2} + Z_{c}\right)}{R_{2} Z_{c}} = - \frac{V_{in}}{R_{1}}\)</p>
+        <p>\(\frac{\left(-1\right) R_{1} \left(R_{2} + Z_{c}\right)}{R_{2} Z_{c}} = \frac{V_{in}}{V_{out}}\)</p>
+        <p>\(\frac{\left(-1\right) R_{1} \left(R_{2} + \frac{1}{C s}\right)}{R_{2} \cdot \frac{1}{C s}} = \frac{V_{in}}{V_{out}}\)</p>
+        <p>\(\frac{\left(-1\right) \left(C s R_{1} R_{2} + R_{1}\right)}{R_{2}} = \frac{V_{in}}{V_{out}}\)</p>
+        <p>\(\frac{C R_{2} s + 1}{1} \left(- \frac{R_{1}}{R_{2}}\right) = \frac{V_{in}}{V_{out}}\)</p>
+        <p>Final Transfer Function</p>
+        <p>\(\frac{\left(-1\right) \frac{1}{R_{1}} R_{2}}{C R_{2} s + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <p>System characteristics in terms of circuit components</p>
+        <p>Passband Gain</p>
+        <p>\(- \frac{R_{2}}{R_{1}} = H_{o}\)</p>
+        <p>Cut-off Frequency (pole location)</p>
+        <p>\(\frac{1}{C 2 \pi R_{2}} = F_{o}\)</p>
+
+    </div>  
 
 {% endblock %}
