@@ -6,3 +6,6 @@ __pycache__/
 
 # Exclude the textfile containing output from bandpass_latex_generator.py
 Bandpass_LaTeX.txt
+
+# Exclude orig_images
+static/orig_images.zip
