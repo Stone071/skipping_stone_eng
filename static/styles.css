@@ -106,3 +106,9 @@ table, th, td {
 .botCapImg {
     max-width: 100%;
 }
+
+/* Math */
+.equation {
+    text-align: center;
+    font-size:1.3rem
+}
