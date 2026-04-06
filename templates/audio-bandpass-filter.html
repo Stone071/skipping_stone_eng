@@ -302,7 +302,29 @@
         we need to use a higher order filter to have a sharper drop in gain at the cutoff frequencies.
     </p>
     <p>
-        One thing that is still good about the choice to use cascaded high and low-pass filters rather than a
+        For example, here is a preliminary result for cascading highpass and lowpass second order filters, both designed with
+        Sallen-Key topology for maximally-flat butterworth response, having Q approximately 0.707. This page will be updated
+        soon to discuss this design choice instead.
+    </p>
+    <div style="display:flex; justify-content: center;">
+        <figure>
+            <img src="{{url_for('static', filename='sk-cascade-bandpass-plot.webp')}}"/>
+            <figcaption>
+                Frequency response of the Sallen-Key cascade.
+            </figcaption>
+        </figure>
+    </div>
+    <div style="display:flex; justify-content: center;">
+        <figure>
+            <img src="{{url_for('static', filename='sk-cascade-bandpass-cir.webp')}}"/>
+            <figcaption>
+                Sallen-Key Bandpass with maximally flat response, targeting the same high channel freqiencies above.
+            </figcaption>
+        </figure>
+    </div>
+    <p>
+        Regardless of first or second-order filters, one great thing about the choice to use cascaded high and 
+        low-pass filters rather than a
         monolithic band-pass filter is that there is more control able to be exercised over the parameters dictating
         the specific response at each end of the passband, due to component value changes controlling the low corner
         frequency not affecting the filter controlling the high corner frequency, and vice versa. Of course, more
