@@ -122,7 +122,7 @@
             We can pretend in this plot that frequency is on the x axis, and filter response is on the y axis. The truth is that
             the response of a second order bandpass filter will always look quite parabolic. It is a fundamental characteristic of 
             the design. The actual transfer function for the topology implemented is 
-            <p class="equation">\(\frac{\left(-1\right) C R_{2} s}{\left(R_{1} C s 2 + R_{1} R_{2} C^{2} s^{2}\right) + 1} = \frac{V_{out}}{V_{in}}\)</p>
+            <p class="equation">\(\frac{-sCR_{2}}{C^{2}R_{1}R_{2}s^{2} + 2CR_{1}s + 1} = \frac{V_{out}}{V_{in}}\)</p>
             <!-- (R<sub>2</sub>Cs)/(C<sup>2</sup>R<sub>2</sub>R<sub>1</sub>s<sup>2</sup> + 2CR<sub>1</sub>s + 1).  -->
             The derivation can be found in <a href="#equation-derivations">Appendix A.</a>
         </p>
@@ -333,7 +333,6 @@
 
     <h2 id="equation-derivations">Appendix A: Solutions for Transfer Functions and System Characteristics</h2>
     <div align="center">  
-        <p><i>NOTE: Sympy python library likes to make its precedence clear through adding many layers of     parenthesis. While it's not the exact way I wrote these equations, the math is still correct.</i></p>
         <h3>Multiple Feedback Bandpass Filter</h3>
         <div style="display: flex; justify-content: center;">
             <figure>
@@ -343,22 +342,23 @@
         </div>
         <p><b>Node Voltage Method</b></p>
         <p>Node 1, between R<sub>1</sub> and C</p>
-        <p class="equation">\(\frac{V_{1}}{\frac{1}{C s}} + \left(\frac{V_{1} - V_{out}}{\frac{1}{C s}} + \frac{V_{1} - V_{in}}{R_{1}}\right) = 0\)</p>
-        <p class="equation">\(C V_{1} s + \left(- C V_{out} s + \left(C V_{1} s + \left(\frac{V_{1}}{R_{1}} - \frac{V_{in}}{R_{1}}\right)\right)\right) = 0\)</p>
+        <p class="equation">\(\frac{V_{1} - V_{in}}{R_{1}} + \frac{V_{1} - V_{out}}{\frac{1}{C s}} + \frac{V_{1}}{\frac{1}{C s}} = 0\)</p>
+        <p class="equation">\(\frac{V_{1}}{R_{1}} - \frac{V_{in}}{R_{1}} + C V_{1} s + - C V_{out} s + C V_{1} s = 0\)</p>
         <p>Node 2, at the inverting input</p>
-        <p class="equation">\(- \frac{V_{1}}{C \frac{1}{s}} - \frac{V_{out}}{R_{2}} = 0\)</p>
-        <p class="equation">\(- C V_{1} s - \frac{V_{out}}{R_{2}} = 0\)</p>
-        <p class="equation">\(\left[ - \frac{V_{out}}{C R_{2} s}\right] = V_{1}\)</p>
+        <p class="equation">\(- \frac{V_{out}}{R_{2}} - \frac{V_{1}}{\frac{1}{Cs}} = 0\)</p>
+        <p class="equation">\(- \frac{V_{out}}{R_{2}} - C V_{1} s = 0\)</p>
+        <p class="equation">\( - \frac{V_{out}}{C R_{2} s} = V_{1}\)</p>
         <p>Substituting Node 2 equation into Node 1 equation</p>
-        <p class="equation">\(\left(- C V_{out} s - - (\left(- \frac{V_{in}}{R_{1}} - \frac{V_{out} \frac{1}{C R_{2} s}}{R_{1}}\right) - \frac{C V_{out} s}{C R_{2} s})\right) - \frac{C V_{out} s}{C R_{2} s} = 0\)</p>
-        <p class="equation">\(- C V_{out} s + \left(\left(\frac{\left(-1\right) V_{out}}{C s R_{1} R_{2}} - \frac{V_{in}}{R_{1}}\right) - \frac{2 V_{out}}{R_{2}}\right) = 0\)</p>
-        <p class="equation">\(- V_{out} \left(C s + \left(\frac{1}{C s R_{1} R_{2}} + \frac{2}{R_{2}}\right)\right) = \frac{V_{in}}{R_{1}}\)</p>
-        <p class="equation">\(- V_{out} \left(C R_{1} s + \left(\frac{R_{1}}{C s R_{1} R_{2}} + \frac{2 R_{1}}{R_{2}}\right)\right) = V_{in}\)</p>
-        <p class="equation">\(- V_{out} \left(\left(\frac{C 2 R_{1} s}{C R_{2} s} + \frac{1}{C R_{2} s}\right) + \frac{C^{2} s^{2} R_{1} R_{2}}{C R_{2} s}\right) = V_{in}\)</p>
+        <p class="equation">\(-\frac{\frac{V_{out}}{CR_{2}s}}{R_{1}} - \frac{V_{in}}{R_{1}} - \frac{CV_{out}s}{CR_{2}s} - CV_{out}s - \frac{CV_{out}s}{CR_{2}s} = 0\)</p>
+        <p class="equation">\(\frac{-V_{out}}{C s R_{1} R_{2}} - \frac{V_{in}}{R_{1}} - \frac{2V_{out}}{R_{2}} - CV_{out}s = 0\)</p>
+        <p class="equation">\(- V_{out}\left( \frac{1}{C s R_{1} R_{2}} + \frac{2}{R_{2}} + Cs \right) = \frac{V_{in}}{R_{1}}\)</p>
+        <p class="equation">\(- V_{out} \left( \frac{R_{1}}{C s R_{1} R_{2}} + \frac{2 R_{1}}{R_{2}} + CR_{1}s\right) = V_{in}\)</p>
+        <p class="equation">\(- V_{out} \left(\frac{1}{C R_{2} s} + \frac{C 2 R_{1} s}{C R_{2} s} + \frac{C^{2} s^{2} R_{1} R_{2}}{C R_{2} s}\right) = V_{in}\)</p>
+        
         <p><b>Final Transfer Function</b></p>
-        <p class="equation">\(\frac{\left(-1\right) C R_{2} s}{\left(R_{1} C s 2 + R_{1} R_{2} C^{2} s^{2}\right) + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <p class="equation">\(\frac{-sCR_{2}}{C^{2}R_{1}R_{2}s^{2} + 2CR_{1}s + 1} = \frac{V_{out}}{V_{in}}\)</p>
         <p>2<sup>nd</sup> order transfer function general form</p>
-        <p class="equation">\(\frac{K \omega_{n}^{2}}{\omega_{n}^{2} + \left(s^{2} + s \omega_{n} 2 \zeta\right)} = H\)</p>
+        <p class="equation">\(\frac{K \omega_{n}^{2}}{s^{2} + 2\zeta\omega_{n}s + \omega_{n}^{2}} = H\)</p>
         <p>Placing the transfer function in the general form, we can relate the component values to the characteristics of the second order system.</p>
         <p><b>Fundamental Frequency</b></p>
         <p class="equation">\(\frac{1}{C \sqrt{R_{1} R_{2}}} = \omega_{n}\)</p>
@@ -374,19 +374,18 @@
             </figure>
         </div>
         <p><b>KCL at Inverting Input</b></p>
-        <p class="equation">\(\frac{\left(-1\right) V_{in}}{R_{1} + Z_{c}} - \frac{V_{out}}{R_{2}} = 0\)</p>
-        <p class="equation">\(\frac{\left(-1\right) R_{2} V_{in}}{R_{1} + Z_{c}} = V_{out}\)</p>
-        <p class="equation">\(\frac{\left(-1\right) R_{2} V_{in}}{R_{1} + \frac{1}{C s}} = V_{out}\)</p>
-        <p class="equation">\(\frac{\left(-1\right) C R_{2} s}{C R_{1} s + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <p class="equation">\(\frac{-V_{in}}{R_{1} + Z_{c}} - \frac{V_{out}}{R_{2}} = 0\)</p>
+        <p class="equation">\(\frac{-R_{2} V_{in}}{R_{1} + Z_{c}} = V_{out}\)</p>
+        <p class="equation">\(\frac{-R_{2} V_{in}}{R_{1} + \frac{1}{C s}} = V_{out}\)</p>
+        <p class="equation">\(\frac{-C R_{2} s}{C R_{1} s + 1} = \frac{V_{out}}{V_{in}}\)</p>
         <p class="equation">\(- \frac{R_{2}}{R_{1}} \frac{C s}{C s + \frac{1}{R_{1}}} = \frac{V_{out}}{V_{in}}\)</p>
         <p><b>Final Transfer Function</b></p>
         <p class="equation">\(- \frac{R_{2}}{R_{1}} \frac{R_{1} C s}{R_{1} C s + 1} = \frac{V_{out}}{V_{in}}\)</p>
         <p>Looking at the transfer function, we can determine the system characteristics in terms of the circuit components.</p>
-        <p class="equation">\(- \frac{R_{2}}{R_{1}} \frac{R_{1} C s}{R_{1} C s + 1} = \frac{V_{out}}{V_{in}}\)</p>
         <p><b>Passband Gain</b></p>
         <p class="equation">\(- \frac{R_{2}}{R_{1}} = H_{o}\)</p>
         <p><b>Cut-off Frequency (pole location)</b></p>
-        <p class="equation">\(\frac{1}{C 2 \pi R_{1}} = F_{o}\)</p>
+        <p class="equation">\(\frac{1}{2 \pi C R_{1}} = F_{o}\)</p>
 
 
         <h3>First Order Lowpass Filter</h3>
@@ -397,20 +396,20 @@
             </figure>
         </div>
         <p><b>KCL at Inverting Input</b></p>
-        <p class="equation">\(- \frac{V_{out}}{R_{2} Z_{c} \frac{1}{R_{2} + Z_{c}}} + \frac{\left(-1\right) V_{in}}{R_{1}} = 0\)</p>
-        <p class="equation">\(\frac{V_{out}}{R_{2} Z_{c} \frac{1}{R_{2} + Z_{c}}} = - \frac{V_{in}}{R_{1}}\)</p>
-        <p class="equation">\(\frac{V_{out} \left(R_{2} + Z_{c}\right)}{R_{2} Z_{c}} = - \frac{V_{in}}{R_{1}}\)</p>
-        <p class="equation">\(\frac{\left(-1\right) R_{1} \left(R_{2} + Z_{c}\right)}{R_{2} Z_{c}} = \frac{V_{in}}{V_{out}}\)</p>
-        <p class="equation">\(\frac{\left(-1\right) R_{1} \left(R_{2} + \frac{1}{C s}\right)}{R_{2} \cdot \frac{1}{C s}} = \frac{V_{in}}{V_{out}}\)</p>
-        <p class="equation">\(\frac{\left(-1\right) \left(C s R_{1} R_{2} + R_{1}\right)}{R_{2}} = \frac{V_{in}}{V_{out}}\)</p>
-        <p class="equation">\(\frac{C R_{2} s + 1}{1} \left(- \frac{R_{1}}{R_{2}}\right) = \frac{V_{in}}{V_{out}}\)</p>
+        <p class="equation">\(-\frac{V_{in}}{R_{1}} - \frac{V_{out}}{\frac{R_{2}Z_{c}}{R_{2} + Z_{c}}} = 0\)</p>
+        <p class="equation">\(\frac{V_{out}}{\frac{R_{2} Z_{c}}{R_{2} + Z_{c}}} = -\frac{V_{in}}{R_{1}}\)</p>
+        <p class="equation">\(\frac{V_{out}(R_{2} + Z_{c})}{R_{2} Z_{c}} = - \frac{V_{in}}{R_{1}}\)</p>
+        <p class="equation">\(-\frac{R_{1}(R_{2} + Z_{c})}{R_{2} Z_{c}} = \frac{V_{in}}{V_{out}}\)</p>
+        <p class="equation">\(-\frac{R_{1}(R_{2} + \frac{1}{C s})}{R_{2} \cdot \frac{1}{C s}} = \frac{V_{in}}{V_{out}}\)</p>
+        <p class="equation">\(-\frac{C s R_{1} R_{2} + R_{1}}{R_{2}} = \frac{V_{in}}{V_{out}}\)</p>
+        <p class="equation">\(-\frac{R_{1}}{R_{2}}(\frac{C R_{2} s + 1}{1}) = \frac{V_{in}}{V_{out}}\)</p>
         <p><b>Final Transfer Function</b></p>
-        <p class="equation">\(\frac{\left(-1\right) \frac{1}{R_{1}} R_{2}}{C R_{2} s + 1} = \frac{V_{out}}{V_{in}}\)</p>
+        <p class="equation">\(-\frac{R_{2}}{R_{1}}(\frac{1}{CR_{2}s+1}) = \frac{V_{out}}{V_{in}}\)</p>
         <p>System characteristics in terms of circuit components</p>
         <p><b>Passband Gain</b></p>
         <p class="equation">\(- \frac{R_{2}}{R_{1}} = H_{o}\)</p>
         <p><b>Cut-off Frequency (pole location)</b></p>
-        <p class="equation">\(\frac{1}{C 2 \pi R_{2}} = F_{o}\)</p>
+        <p class="equation">\(\frac{1}{2 \pi CR_{2}} = F_{o}\)</p>
 
     </div>  
 
