@@ -96,7 +96,7 @@
             When designing for audio and many other applications, it is desirable to amplify selected frequencies
             evenly across the entire bandwidth. You effectively want to take a rectangular window of frequencies
             and boost them all the same amount. Unfortunately, this is not what was achieved with the equalizer designed in lab.
-            To the right is a frequency response plot from the output of the 3 channel equalizer.
+            Above is a frequency response plot from the output of the 3 channel equalizer.
         </p>
         <p>                    
             It is very clear in this frequency response that the frequencies in between the center frequency of each bandpass
@@ -114,7 +114,7 @@
         <figure>
             <iframe src="https://www.desmos.com/calculator/neifeiivwb?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
             <figcaption>
-                A plot of y = 1 / (ax<sup>2</sup> + bx + c)
+                A plot of y = 1 / (ax<sup>2</sup> + bx + c), with a, b, and c all = 1.
             </figcaption>
         </figure>
         </div>
@@ -266,14 +266,14 @@
             <td>none</td>
             <td>5.25E-08</td>
             <td>7.88E-09</td>
-        </tr>
+        </tr>`
     </table>
 
     <h3>Simulation</h3>
     <p>
-        The simulation quickly revealed something disappointing, which is that the passbands of these filters really are very narrow,
-        so narrow in fact that the sloping shoulder of each filter meets in the middle, and produces the same peak amplitude in the
-        middle of the passband, with amplitude reducing immediately on leaving the middle of the passband. This can be seen below using
+        The simulation quickly revealed something disappointing, which is that the passbands required for audio filters are very narrow, in many cases only one decade in width.
+        This is narrow enough that when using low order filters, like the first order filters used here, the sloping shoulder of each filter meets in the middle, and produces an amplitude peak in the
+        middle of the passband, with amplitude reducing immediately on either side of the center. This can be seen below using
         the component values for the high channel.
     </p>
     <div style="display:flex; justify-content: center;">
