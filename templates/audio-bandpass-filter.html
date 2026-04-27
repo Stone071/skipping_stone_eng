@@ -24,8 +24,7 @@
             <li><a href="#background">Background</a></li>
             <li><a href="#requirements">Requirements</a></li>
             <li><a href="#design">Design</a></li>
-            <li><a href="#further-improvements">Further Improvements</a></li>
-            <li><a href="#equation-derivations">Appendix A: Solutions for Transfer Functions and System Characteristics</a></li>
+            <li><a href="#equation-solutions">Appendix A: Solutions for Transfer Functions and System Characteristics</a></li>
         </ul>
     </div>
 
@@ -96,36 +95,35 @@
             When designing for audio and many other applications, it is desirable to amplify selected frequencies
             evenly across the entire bandwidth. You effectively want to take a rectangular window of frequencies
             and boost them all the same amount. Unfortunately, this is not what was achieved with the equalizer designed in lab.
-            Above is a frequency response plot from the output of the 3 channel equalizer.
+            To the right is a frequency response plot from the output of the 3 channel equalizer.
         </p>
         <p>                    
             It is very clear in this frequency response that the frequencies in between the center frequency of each bandpass
             filter are not being effectively amplified. The amplitude which is achieved at center frequency is not being
             achieved throughout the passband of each filter. There are a couple things contributing to this. Firstly, the
             bandpass topology used here is not the best choice. Multiple-feedback bandpass filters are good for high Q, 
-            low bandwidth applications, selectively boosting a very narrow frequency band.</p>
+            low bandwidth applications, selectively boosting a very narrow frequency band. Additionally, the slope at which
+            the MFB attenuates frequencies farther away from its center frequency is quite shallow, at -20dB/dec. This is low in
+            comparison to a typical second-order filter, which would typically show a -40dB/dec slope. This shallow slope causes
+            the filters responses near each other in the frequency spectrum to overlap. Together, these characteristics make the MFB 
+            topology a poor choice for this bandpass application.
+        </p>
         </p>
         <p>
-            More importantly, a second order bandpass filter can never achieve this wide flat response in the passband by the basic 
-            fact that the relationship of the output to the input has a second-order expression in the denominator. 
-            Anyone can see this by just graphing any second order function.
+            Below, the shallow -20dB/dec slope and prominent peak of the second order multiple-feedback bandpass filter can be seen.
+            The actual transfer function for the filter as implemented is 
+            <p class="equation">\(\frac{-sCR_{2}}{C^{2}R_{1}R_{2}s^{2} + 2CR_{1}s + 1} = \frac{V_{out}}{V_{in}}\)</p>
+            <!-- (R<sub>2</sub>Cs)/(C<sup>2</sup>R<sub>2</sub>R<sub>1</sub>s<sup>2</sup> + 2CR<sub>1</sub>s + 1).  -->
+            The solution for this equation be found in <a href="#equation-solutions">Appendix A.</a>
         </p>
         <div style="display:flex; justify-content: center;">
         <figure>
-            <iframe src="https://www.desmos.com/calculator/neifeiivwb?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+            <img src="{{url_for('static',filename='mfb-bandpass-freq-response.png')}}"/>
             <figcaption>
-                A plot of y = 1 / (ax<sup>2</sup> + bx + c), with a, b, and c all = 1.
+            The amplitude frequency response from the low channel multiple feedback bandpass filter.
             </figcaption>
         </figure>
         </div>
-        <p>
-            We can pretend in this plot that frequency is on the x axis, and filter response is on the y axis. The truth is that
-            the response of a second order bandpass filter will always look quite parabolic. It is a fundamental characteristic of 
-            the design. The actual transfer function for the topology implemented is 
-            <p class="equation">\(\frac{-sCR_{2}}{C^{2}R_{1}R_{2}s^{2} + 2CR_{1}s + 1} = \frac{V_{out}}{V_{in}}\)</p>
-            <!-- (R<sub>2</sub>Cs)/(C<sup>2</sup>R<sub>2</sub>R<sub>1</sub>s<sup>2</sup> + 2CR<sub>1</sub>s + 1).  -->
-            The derivation can be found in <a href="#equation-derivations">Appendix A.</a>
-        </p>
     </div>
 
     <h2 id="design">Design</h2>
@@ -143,75 +141,114 @@
     </p>
     <div style="display: flex; justify-content: center;">
         <figure>
-            <iframe src="https://www.desmos.com/calculator/exsdldqzgl?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
-            <figcaption>A first order low pass filter of H<sub>1</sub> = 1 / (ax+b) where a = 1 and b = -10.</figcaption>
-        </figure>
-        <figure>
-            <iframe src="https://www.desmos.com/calculator/dfmxl3qnpa?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
-            <figcaption>A first order high pass filter of H<sub>2</sub> = 1 / (ux+w) where u = -3 and b = 10.</figcaption>
+            <img src="{{url_for('static',filename='sk-lpf-mid-channel-freq-rsp.png')}}"/>
+            <figcaption>
+            The amplitude frequency response from a second order low-pass filter.
+            </figcaption>
         </figure>
     </div>
     <div style="display: flex; justify-content: center;">
         <figure>
-            <iframe src="https://www.desmos.com/calculator/oxrxsjrs7s?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
-            <figcaption>The composite filter, where the output of one feeds into the other.</figcaption>
+            <img src="{{url_for('static',filename='sk-hpf-mid-channel-freq-rsp.png')}}"/>
+            <figcaption>
+            The amplitude frequency response from a second order high-pass filter.
+            </figcaption>
+        </figure>
+    </div>
+    <div style="display: flex; justify-content: center;">
+        <figure>
+            <img src="{{url_for('static',filename='sk-lpf-hpf-mid-channel-freq-rsp.png')}}"/>
+            <figcaption>
+            The amplitude frequency response from a cascade of second order high-pass and low pass filters.
+            </figcaption>
         </figure>
     </div>
     <p>
-        In the final plot, one can see that that by combining the left region of the left plot and the right region of the right plot,
-        we have created a zone in the middle where they overlap. This middle zone is the passband. For now, we'll consider simpler
-        better, and pursue this idea with some first order high and low pass filters.
+        One can see how overlaying the first two plots creates the third, where there is a flat passband between 300Hz and 3kHz.
+        Additionally, the slope on either side of the passband is seen to be -40dB/dec, which makes it easier to accurately target
+        frequencies without overlapping responses with adjacent filters.
     </p>
 
     <h3>Circuit Layout</h3>
     <figure width="100%" style="max-width: 100%;">
-        <img width="100%" src="{{url_for('static', filename='cascaded-hi-low-first-order.webp')}}"/>
-        <figcaption>The circuit diagram for a cascade of first order high-pass and low-pass active filters.</figcaption>
+        <img width="100%" src="{{url_for('static', filename='sk-cascade-bandpass-cir.png')}}"/>
+        <figcaption>The circuit diagram for a cascade of second order Sallen-Key filters.</figcaption>
     </figure>
 
     <h3>Topology</h3>
     <p>
-        The topology being employed here is very simple. In the lowpass filter, placing a capacitor in the feedback path causes
-        the impedance seen by the feedback to be reduced as frequency increases, thus causing more feedback and reducing gain.
-        For the highpass filter, the capacitor in the signal path to the input poses high impedance at low frequency, effectively blocking
-        low frequencies.
+        The topology being employed here can be understood with some intuition. In the lowpass filter, placing a capacitor in the feedback path causes
+        the impedance seen by the feedback to be reduced as frequency increases, so feedback increases with frequency and reduces gain.
+        Additionally, there is a capacitor shunt to ground at the noninverting input. This capacitor presents a low impedance path to
+        ground at high frequency, causing high frequency inputs to be sent to ground rather than the input. Through these two elements,
+        both the input signal and gain can be reduced with frequency, causing the -40db/dec slope which is characteristic of second-order filters.
+        For the highpass filter, the two capacitors along the input path present very high impedance to low-frequency inputs,
+        effectively blocking them. Once again, having two frequency dependent elements affecting the input-output relationship creates the
+        second order response.
     </p>
 
     <h3>Design Equations</h3>
+    <h4>Sallen-Key Low-Pass Filter</h4>
     <p>
         The low-pass filter has a transfer function of
-        <p class="equation">\( -\frac{R_2}{R_1}\ \frac{1}{s R_2 C + 1} = \frac{V_{out}}{V_{in}} \)</p>
-        The derivation of this can be found in <a href="#equation-derivations">Appendix A.</a>
+        <p class="equation">\( \frac{\frac{1}{C_{3}C_{4}R_{1}R_{2}}}{s^{2} + 2(\frac{C_{4}(R_{1}+R_{2})}{2\sqrt{C_{3}C_{4}R_{1}R_{2}}})(\frac{1}{\sqrt{C_{3}C_{4}R_{1}R_{2}}}) + \frac{1}{C_{3}C_{4}R_{1}R_{2}}} 
+            = \frac{V_{out}}{V_{in}} \)</p>
+        The solution for this equation can be found in <a href="#equation-solutions">Appendix A.</a>
     </p>
     <p>
-        This transfer function tells us some things implicitly. We can see that the passband has a gain of -(R<sub>2</sub>/R<sub>1</sub>).
-        We can also see that the first order pole will exist when sR<sub>2</sub>C = -1. This is our cut off frequency.
+        From the transfer function, we can define expressions for important characteristics like quality factor and natural frequency.
     </p>
-    <p class="equation">\(\frac{1}{C 2 \pi R_{2}} = F_{o}\)</p>
-    <!-- <p>F<sub>o</sub> = 1/(2piR<sub>2</sub>C)</p> -->
-    <p>In order to make a capacitor selection for a given cut off frequency, this equation should be solved for C.</p>
-    <!-- <p>C = 1/(2piR<sub>2</sub>F<sub>o</sub>)</p> -->
-    <p class="equation">\(\frac{1}{F_o 2 \pi R_{2}} = C\)</p>
+    <p class="equation">\( \frac{1}{\sqrt{C_{3}C_{4}R_{1}R_{2}}} = \omega_{n}\)</p>
+    <p class="equation">\( \frac{\sqrt{C_{3}C_{4}R_{1}R_{2}}}{C_{4}(R_{1}+R_{2})} = Q\)</p>
+    <p> 
+        The natural frequency and quality factor together characterize the region where the passband begins to turn down and get reduced by the filter.
+        The natural frequency is generally the frequency at which the passband transitions into frequencies being blocked by the filter. The quality factor determines
+        how close to the natural frequency the passband comes before turning down, and also the performance of the filter nearing this edge.
+        High quality factors come very close to the natural frequency before turning down, but also experience a peak in the amplitude response near this edge.
+        Lower quality factors will not approach the natural frequency as closely before turning down, but experience a flat passband. A butterworth design
+        is one which has a maximally flat passband while approaching the natural frequency as closely as possible, and is achieved by specifying
+    </p>
+    <p class="equation">\( \frac{1}{\sqrt{2}} = Q\)</p>
+    <p> 
+        Given that we have two characterstics which we would like to design for and four independent values to specify in the Sallen-Key topology, common practice
+        is to constrain the four independents by specifying a relationship between the two resistors and the two capacitors.
+    </p>
+    <p class="equation">\( R_{1} = mR \)</p>
+    <p class="equation">\( R_{2} = \frac{1}{m}R \)</p>
+    <p class="equation">\( C_{3} = nC \)</p>
+    <p class="equation">\( C_{4} = \frac{1}{n}C \)</p>
+    <p> 
+        Now, with these relationships defined, there are still four independent variables, m, R, n, and C, but the expressions for quality factor
+        and natural frequency no longer depend on the same subset of independent variables.
+    </p>
+    <p class="equation">\( \frac{nm}{m^{2}+1} = Q \)</p>
+    <p class="equation">\( \frac{1}{RC} = \omega_{n} \)</p>
+    <p>
+        Now, by selecting \( m = 1 \) and \( n = \sqrt{2} \), we can set Q for butterworth or maximally flat response. By choosing values of R and C, we can
+        set the natural frequency wherever we want frequencies to begin getting blocked without affecting the quality factor.
+    </p>
+    <h4>Sallen-Key High-Pass Filter</h4>
     <p>
         The high-pass filter has a transfer function of
-        <p class="equation">\(- \frac{R_{2}}{R_{1}} \frac{R_{1} C s}{R_{1} C s + 1} = \frac{V_{out}}{V_{in}}\)</p>
-        <!-- (-R<sub>f</sub>/R<sub>1</sub>)(sCR<sub>1</sub>/sCR<sub>1</sub>+1). -->
-        The derivation of this can be found in <a href="#equation-derivations">Appendix A.</a>
+        <p class="equation"> \( \frac{s^{2}}{s^{2} + 2(\frac{(C_{1}+C_{2})R3}{2\sqrt{R_{3}R_{4}C_{1}C_{2}}})(\frac{1}{\sqrt{R_{3}R_{4}C_{1}C_{2}}}) 
+            + \frac{1}{R_{3}R_{4}C_{1}C_{2}}} = \frac{V_{out}}{V_{in}}\)</p>
+        The solution for this equation can be found in <a href="#equation-solutions">Appendix A.</a>
     </p>
     <p>
-        Like the low-pass filter, this function tells us the passband gain is 
-        <p class="equation">\(- \frac{R_{2}}{R_{1}} = H_{o}\)</p>
-        <!-- (-R<sub>f</sub>/R<sub>1</sub>), -->
-        and the cut-off frequency is 
-        <p class="equation">\(\frac{1}{C 2 \pi R_{1}} = F_{o}\)</p>
-        <!-- F<sub>o</sub> = 1/(2piR<sub>1</sub>C). -->
+        Using the same component relationships described above, we can express quality factor and natural frequency in terms of R and C.
     </p>
+    <p class="equation">\( \frac{n}{m(n^{2}+1)} = Q \)</p>
+    <p class="equation">\( \frac{1}{RC} = \omega_{n} \)</p>
+    <p>
+        In this case, to achieve butterworth response, \( m = \frac{1}{\sqrt{2}} \) and \( n = 1 \). Then once again values of R and C must be chosen
+        around the desired cut-off frequency.
+    </p>
+
 
     <h3>Component Selection</h3>
     <p>
-        In this instance, I chose common resistor values such that
-        gain was unity, and allowed the capacitory values to dictate the cut off frequency. If this design were to be produced, it would
-        be worth it to find a combination of common R and C values which achieve the desired cut off frequency.
+        Component values were selected which achieved the goal of having three frequency bands for gain control while maintaining \( Q = \frac{1}{\sqrt{2}} \).
+        If this design were to be produced in the real world, it would be worth spending more time to adjust the design to use common component values.
     </p>
     <table align="center">
         <th>
@@ -220,118 +257,188 @@
             <td><b>High Channel</b></td>
         </th>
         <tr>
-            <td><b>Low (Hz)</b></td>
-            <td>0</td>
-            <td>300</td>
-            <td>3000</td>
+            <td></td>
+            <td><b>Low Pass</b></td>
+            <td><b>Low Pass</b></td>
+            <td><b>Low Pass</b></td>
         </tr>
         <tr>
-            <td><b>High (Hz)</b></td>
-            <td>300</td>
-            <td>3000</td>
-            <td>20000</td>
+            <td><b>Q</b></td>
+            <td>0.707</td>
+            <td>0.707</td>
+            <td>0.707</td>
         </tr>
         <tr>
-            <td><b>R1</b></td>
-            <td>10.1k</td>
-            <td>10.1k</td>
-            <td>10.1k</td>
+            <td><b>Natural Freq (rad/s)</b></td>
+            <td>2.13K</td>
+            <td>33.3K</td>
+            <td>167K</td>
         </tr>
         <tr>
-            <td><b>R2</b></td>
-            <td>10.1k</td>
-            <td>10.1k</td>
-            <td>10.1k</td>
+            <td><b>Natural Freq (Hz)</b></td>
+            <td>338.63</td>
+            <td>5305.16</td>
+            <td>26525.82</td>
         </tr>
         <tr>
-            <td><b>Low Pass F<sub>o</sub></b></td>
-            <td>300</td>
-            <td>3000</td>
-            <td>20000</td>
+            <td><b>m</b></td>
+            <td>1.00</td>
+            <td>1.00</td>
+            <td>1.00</td>
         </tr>
         <tr>
-            <td><b>Low Pass Capacitor</b></td>
-            <td>5.25E-08</td>
-            <td>5.25E-09</td>
-            <td>7.88E-10</td>
+            <td><b>n</b></td>
+            <td>1.414</td>
+            <td>1.414</td>
+            <td>1.414</td>
         </tr>
         <tr>
-            <td><b>High Pass F<sub>o</sub></b></td>
-            <td>none</td>
-            <td>300</td>
-            <td>3000</td>
+            <td><b>R (ohm)</b></td>
+            <td>10K</td>
+            <td>150</td>
+            <td>10K</td>
         </tr>
         <tr>
-            <td><b>High Pass Capacitor</b></td>
-            <td>none</td>
-            <td>5.25E-08</td>
-            <td>7.88E-09</td>
-        </tr>`
+            <td><b>C (F)</b></td>
+            <td>47n</td>
+            <td>200n</td>
+            <td>600p</td>
+        </tr>
+        <tr>
+            <td><b>R1 (ohm)</b></td>
+            <td>10K</td>
+            <td>150</td>
+            <td>10K</td>
+        </tr>
+        <tr>
+            <td><b>R2 (ohm)</b></td>
+            <td>10K</td>
+            <td>150</td>
+            <td>10K</td>
+        </tr>
+        <tr>
+            <td><b>C3 (F)</b></td>
+            <td>66.5n</td>
+            <td>283n</td>
+            <td>848p</td>
+        </tr>
+        <tr>
+            <td><b>C4 (F)</b></td>
+            <td>33.2n</td>
+            <td>141n</td>
+            <td>424p</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><b>High Pass</b></td>
+            <td><b>High Pass</b></td>
+            <td><b>High Pass</b></td>
+        </tr>
+        <tr>
+            <td><b>Q</b></td>
+            <td>N/A</td>
+            <td>0.707</td>
+            <td>0.707</td>
+        </tr>
+        <tr>
+            <td><b>Natural Freq (rad/s)</b></td>
+            <td>N/A</td>
+            <td>1.06K</td>
+            <td>20K</td>
+        </tr>
+        <tr>
+            <td><b>Natural Freq (Hz)</b></td>
+            <td>N/A</td>
+            <td>169.31</td>
+            <td>3183.1</td>
+        </tr>
+        <tr>
+            <td><b>m</b></td>
+            <td>N/A</td>
+            <td>0.707</td>
+            <td>0.707</td>
+        </tr>
+        <tr>
+            <td><b>n</b></td>
+            <td>N/A</td>
+            <td>1.00</td>
+            <td>1.00</td>
+        </tr>
+        <tr>
+            <td><b>R (ohm)</b></td>
+            <td>N/A</td>
+            <td>20K</td>
+            <td>250</td>
+        </tr>
+        <tr>
+            <td><b>C (F)</b></td>
+            <td>N/A</td>
+            <td>47n</td>
+            <td>200n</td>
+        </tr>
+        <tr>
+            <td><b>R3 (ohm)</b></td>
+            <td>N/A</td>
+            <td>14.1K</td>
+            <td>177</td>
+        </tr>
+        <tr>
+            <td><b>R4 (ohm)</b></td>
+            <td>N/A</td>
+            <td>28.3K</td>
+            <td>354</td>
+        </tr>
+        <tr>
+            <td><b>C1 (F)</b></td>
+            <td>N/A</td>
+            <td>47n</td>
+            <td>200n</td>
+        </tr>
+        <tr>
+            <td><b>C2 (F)</b></td>
+            <td>N/A</td>
+            <td>47n</td>
+            <td>200n</td>
+        </tr>
     </table>
-
+    
+    <div style="display:flex; justify-content: center;">
+        <figure>
+            <img width=100% src="{{url_for('static',filename='sk-cascade-three-band-eq.png')}}">
+            <figcaption>The full circuit, including a resistive amplifier to manage gain on each channel, and and a summing amplifier to recombine the signals.</figcaption>
+        </figure>
+    </div>
+    
     <h3>Simulation</h3>
     <p>
-        The simulation quickly revealed something disappointing, which is that the passbands required for audio filters are very narrow, in many cases only one decade in width.
-        This is narrow enough that when using low order filters, like the first order filters used here, the sloping shoulder of each filter meets in the middle, and produces an amplitude peak in the
-        middle of the passband, with amplitude reducing immediately on either side of the center. This can be seen below using
-        the component values for the high channel.
+        The simulation shows the desired outcome on each channel, with a flat passband fenced
+        between two slopes which are steep enough to not interact with neighboring filters in
+        disfunctional ways.
     </p>
     <div style="display:flex; justify-content: center;">
         <figure>
-            <img src="{{url_for('static',filename='peaky-passband.webp')}}">
-            <figcaption>An prominent peak in the passband.</figcaption>
+            <img width="100%" src="{{url_for('static',filename='sk-cascade-three-band-eq-channels-plot.png')}}">
         </figure>
     </div>
-    <p>
-        In order to really see the flat passband of these cascaded filters, the bandwidth of must be much wider. See below,
-        where bandwidth is almost 300 kHz.
-    </p>
-    <div style="display:flex; justify-content: center;">
-        <figure>
-            <img src="{{url_for('static',filename='flat-passband.webp')}}">
-            <figcaption>A flatter response in the passband.</figcaption>
-        </figure>
-    </div>
+    <p>Above is the amplitude frequency response for the three channels, with the low channel in red, the middle channel in green, and the high channel in orange.</p>
 
-    <h2 id="further-improvements">Further Improvements</h2>
-    <p>
-        I retract what I said about this being much better accomplished with cascading first order filters.
-        The first order filters have a -20dB/decade slope, which turns out to be far too shallow for making effective audio filters. 
-        0-200Hz, 300-3000Hz, and even 3000-20000Hz are quite narrow passbands, and if we want these
-        three passbands to have a flatter response across the  curve while not overlapping in a significant way,
-        we need to use a higher order filter to have a sharper drop in gain at the cutoff frequencies.
-    </p>
-    <p>
-        For example, here is a preliminary result for cascading highpass and lowpass second order filters, both designed with
-        Sallen-Key topology for maximally-flat butterworth response, having Q approximately 0.707. This page will be updated
-        soon to discuss this design choice instead.
-    </p>
     <div style="display:flex; justify-content: center;">
         <figure>
-            <img src="{{url_for('static', filename='sk-cascade-bandpass-plot.webp')}}"/>
-            <figcaption>
-                Frequency response of the Sallen-Key cascade.
-            </figcaption>
+            <img width="100%" src="{{url_for('static',filename='sj-cascade-three-band-eq-output-plot.png')}}">
         </figure>
     </div>
-    <div style="display:flex; justify-content: center;">
-        <figure>
-            <img src="{{url_for('static', filename='sk-cascade-bandpass-cir.webp')}}"/>
-            <figcaption>
-                Sallen-Key Bandpass with maximally flat response, targeting the same high channel freqiencies above.
-            </figcaption>
-        </figure>
-    </div>
+    <p>Above is the amplitude frequency response of the output (blue) shown in comparison to the amplitude frequency response for each channel.</p>
+
     <p>
-        Regardless of first or second-order filters, one great thing about the choice to use cascaded high and 
-        low-pass filters rather than a
-        monolithic band-pass filter is that there is more control able to be exercised over the parameters dictating
-        the specific response at each end of the passband, due to component value changes controlling the low corner
-        frequency not affecting the filter controlling the high corner frequency, and vice versa. Of course, more
-        components costs more money.
+        It can clearly be seen that the amplitude frequency response for the final output is not completely flat. This is because the
+        edges of the frequency spectrum for each filter do overlap and interact. In fact, frequencies targeted by the middle channel
+        were specifically selected to overlap with the low and high channels such that there are not major gaps in the frequency response,
+        which would result in some frequencies between each channel getting tuned out. As a result of this, there are some secondary peaks in the
+        frequency response where the middle channel meets with the low and high channels. These are likely to not be significantly audible,
+        and are quickly overshadowed once the gain on any individual channel is turned up above the other channels.
     </p>
 
-    <h2 id="equation-derivations">Appendix A: Solutions for Transfer Functions and System Characteristics</h2>
+    <h2 id="equation-solutions">Appendix A: Solutions for Transfer Functions and System Characteristics</h2>
     <div align="center">  
         <h3>Multiple Feedback Bandpass Filter</h3>
         <div style="display: flex; justify-content: center;">
@@ -357,59 +464,91 @@
         
         <p><b>Final Transfer Function</b></p>
         <p class="equation">\(\frac{-sCR_{2}}{C^{2}R_{1}R_{2}s^{2} + 2CR_{1}s + 1} = \frac{V_{out}}{V_{in}}\)</p>
-        <p>2<sup>nd</sup> order transfer function general form</p>
+        <p>2<sup>nd</sup> order transfer function standard form</p>
         <p class="equation">\(\frac{K \omega_{n}^{2}}{s^{2} + 2\zeta\omega_{n}s + \omega_{n}^{2}} = H\)</p>
-        <p>Placing the transfer function in the general form, we can relate the component values to the characteristics of the second order system.</p>
+        <p>Placing the transfer function in the standard form, we can relate the component values to the characteristics of the second order system.</p>
         <p><b>Fundamental Frequency</b></p>
         <p class="equation">\(\frac{1}{C \sqrt{R_{1} R_{2}}} = \omega_{n}\)</p>
         <p><b>Damping Ratio</b></p>
         <p class="equation">\(\frac{\sqrt{R_{1} R_{2}}}{R_{2}} = \zeta\)</p>
 
 
-        <h3>First Order Highpass Filter</h3>
+        <h3>Sallen-Key Low Pass Filter</h3>
         <div style="display: flex; justify-content: center;">
             <figure>
-                <img width="80%" src="{{url_for('static',filename='highpass-filter-circuit.webp')}}"/>
-                <figcaption>Circuit diagram for the first order RC highpass filter</figcaption>
+                <img width="80%" src="{{url_for('static',filename='sk-lpf-cir.png')}}"/>
+                <figcaption>Circuit diagram for a Sallen-Key low pass filter</figcaption>
             </figure>
         </div>
-        <p><b>KCL at Inverting Input</b></p>
-        <p class="equation">\(\frac{-V_{in}}{R_{1} + Z_{c}} - \frac{V_{out}}{R_{2}} = 0\)</p>
-        <p class="equation">\(\frac{-R_{2} V_{in}}{R_{1} + Z_{c}} = V_{out}\)</p>
-        <p class="equation">\(\frac{-R_{2} V_{in}}{R_{1} + \frac{1}{C s}} = V_{out}\)</p>
-        <p class="equation">\(\frac{-C R_{2} s}{C R_{1} s + 1} = \frac{V_{out}}{V_{in}}\)</p>
-        <p class="equation">\(- \frac{R_{2}}{R_{1}} \frac{C s}{C s + \frac{1}{R_{1}}} = \frac{V_{out}}{V_{in}}\)</p>
-        <p><b>Final Transfer Function</b></p>
-        <p class="equation">\(- \frac{R_{2}}{R_{1}} \frac{R_{1} C s}{R_{1} C s + 1} = \frac{V_{out}}{V_{in}}\)</p>
-        <p>Looking at the transfer function, we can determine the system characteristics in terms of the circuit components.</p>
-        <p><b>Passband Gain</b></p>
-        <p class="equation">\(- \frac{R_{2}}{R_{1}} = H_{o}\)</p>
-        <p><b>Cut-off Frequency (pole location)</b></p>
-        <p class="equation">\(\frac{1}{2 \pi C R_{1}} = F_{o}\)</p>
+        <p><b>(1) KCL at Noninverting Input</b></p>
+        <p class="equation">\( \frac{V_{1}}{Z_{C4}} + \frac{V_{1}-V_{2}}{R_{2}} = 0 \)</p>
+        <p class="equation">\( \frac{V_{out}}{Z_{C4}} + \frac{V_{out}-V_{2}}{R_{2}} = 0 \)</p>
+        <p class="equation">\( R_{2}(\frac{V_{out}}{Z_{C4}}+\frac{V_{out}}{R_{2}}) = V_{2} \)</p>
+        <p class="equation">\( V_{out}(\frac{R_{2}}{Z_{C4}}+1) = V_{2} \)</p>
+        <p><b>(2) KCL at feedback node</b></p>
+        <p class="equation">\( \frac{V_{2}-V_{1}}{R_{2}} + \frac{V_{2}-V_{in}}{R_{1}} + \frac{V_{2}-V_{out}}{Z_{C3}} +  = 0 \)</p>
+        <p class="equation">\( \frac{V_{2}-V_{out}}{R_{2}} + \frac{V_{2}-V_{in}}{R_{1}} + \frac{V_{2}-V_{out}}{Z_{C3}} +  = 0 \)</p>
+        <p>Substitute (1) into (2)</p>
+        <p class="equation">\( \frac{V_{out}(\frac{R_{2}}{Z_{C4}})}{R_{2}} + \frac{V_{out}(\frac{R_{2}}{Z_{C4}}+1)-V_{in}}{R_{1}} 
+            + \frac{V_{out}(\frac{R_{2}}{Z_{C4}})}{Z_{C3}} = 0 \)</p>
+        <p class="equation">\( \frac{V_{out}}{Z_{C4}} + \frac{V_{out}(\frac{R_{2}}{Z_{C4}})}{R_{1}} + \frac{V_{out}}{R_{1}} 
+            + \frac{V_{in}}{R_{1}} + \frac{V_{out}(\frac{R_{2}}{Z_{C4}})}{Z_{C3}} = 0 \)</p>
+        <p class="equation">\( V_{out}(\frac{1}{Z_{C4}} + \frac{R_{2}}{Z_{C4}R_{1}} + \frac{1}{R_{1}} + \frac{R_{2}}{Z_{C3}Z_{C4}})  
+            = \frac{V_{in}}{R_{1}} \)</p>
+        <p class="equation">\( R_{1}(\frac{1}{Z_{C4}} + \frac{R_{2}}{Z_{C4}R_{1}} + \frac{1}{R_{1}} + \frac{R_{2}}{Z_{C3}Z_{C4}})  
+            = \frac{V_{in}}{V_{out}} \)</p>
+        <p class="equation">\( \frac{R_{1}}{Z_{C4}} + \frac{R_{2}}{Z_{C4}} + 1 + \frac{R_{2}R_{1}}{Z_{C3}Z_{C4}} = \frac{V_{in}}{V_{out}} \)</p>
+        <p class="equation">\( \frac{R_{1}Z_{C3}+R_{2}Z_{C3}+Z_{C3}Z_{C4}+R_{2}R_{1}}{Z_{C4}Z_{C4}} = \frac{V_{in}}{V_{out}} \)</p>
+        <p class="equation">\( \frac{Z_{C4}Z_{C4}}{R_{1}Z_{C3}+R_{2}Z_{C3}+Z_{C3}Z_{C4}+R_{2}R_{1}} = \frac{V_{out}}{V_{in}} \)</p>
+        <p class="equation">\( \frac{(\frac{1}{sC_{3}})(\frac{1}{sC_{4}})}{R_{1}R_{2}+\frac{1}{sC_{3}}(R_{2}+R_{1})+(\frac{1}{sC_{3}})(\frac{1}{sC_{4}})} = \frac{V_{out}}{V_{in}} \)</p>
+        <p class="equation">\( \frac{\frac{1}{s^{2}C_{3}C_{4}}}{R_{1}R_{2}+\frac{1}{sC_{3}}(R_{2}+R_{1})+\frac{1}{s^{2}C_{3}C_{4}}} = \frac{V_{out}}{V_{in}} \)</p>
+        <p class="equation">\( \frac{\frac{1}{s^{2}C_{3}C_{4}}}{\frac{s^{2}C_{3}C_{4}R_{1}R_{2}+sR_{2}C_{4}+sR_{1}C_{4}+1}{s^{2}C_{3}C_{4}}} = \frac{V_{out}}{V_{in}} \)</p>
+        
+        <p><b>Transfer Function</b></p>
+        <p class="equation">\( \frac{1}{(C_{3}C_{4}R_{1}R_{2})s^{2}+(R_{2}C_{4}+R_{1}C_{4})s+1} = \frac{V_{out}}{V_{in}} \)</p>
+        <p><b>Transfer Function to Standard Form</b></p>
+        <p class="equation">\( \frac{\frac{1}{C_{3}C_{4}R_{1}R_{2}}}{s^{2} 
+            + 2(\frac{C_{4}(R_{1}+R_{2})}{2\sqrt{C_{3}C_{4}R_{1}R_{2}}})(\frac{1}{\sqrt{C_{3}C_{4}R_{1}R_{2}}})s 
+            + \frac{1}{C_{3}C_{4}R_{1}R_{2}}} = \frac{V_{out}}{V_{in}} \)</p>
 
-
-        <h3>First Order Lowpass Filter</h3>
+        <p><b>Gain</b></p>
+        <p class="equation">\( \frac{C_{3}C_{4}R_{1}R_{2}}{C_{3}C_{4}R_{1}R_{2}} = 1 = K \)</p>
+        
+        <p><b>Quality Factor</b></p>
+        <p class="equation">\( \frac{\sqrt{C_{3}C_{4}R_{1}R_{2}}}{C_{4}(R_{1}+R_{2})} = Q \)</p>
+        
+        <p><b>Natural Frequency</b></p>
+        <p class="equation">\( \frac{1}{\sqrt{C_{3}C_{4}R_{1}R_{2}}} = \omega_{n} \)</p>
+        
+        <h3>Sallen-Key High Pass Filter</h3>
         <div style="display: flex; justify-content: center;">
             <figure>
-                <img width="80%" src="{{url_for('static',filename='lowpass-filter-circuit.webp')}}"/>
-                <figcaption>Circuit diagram for the first order RC lowpass filter</figcaption>
+                <img width="80%" src="{{url_for('static',filename='sk-hpf-cir.png')}}"/>
+                <figcaption>Circuit diagram for a Sallen-Key high pass filter</figcaption>
             </figure>
         </div>
-        <p><b>KCL at Inverting Input</b></p>
-        <p class="equation">\(-\frac{V_{in}}{R_{1}} - \frac{V_{out}}{\frac{R_{2}Z_{c}}{R_{2} + Z_{c}}} = 0\)</p>
-        <p class="equation">\(\frac{V_{out}}{\frac{R_{2} Z_{c}}{R_{2} + Z_{c}}} = -\frac{V_{in}}{R_{1}}\)</p>
-        <p class="equation">\(\frac{V_{out}(R_{2} + Z_{c})}{R_{2} Z_{c}} = - \frac{V_{in}}{R_{1}}\)</p>
-        <p class="equation">\(-\frac{R_{1}(R_{2} + Z_{c})}{R_{2} Z_{c}} = \frac{V_{in}}{V_{out}}\)</p>
-        <p class="equation">\(-\frac{R_{1}(R_{2} + \frac{1}{C s})}{R_{2} \cdot \frac{1}{C s}} = \frac{V_{in}}{V_{out}}\)</p>
-        <p class="equation">\(-\frac{C s R_{1} R_{2} + R_{1}}{R_{2}} = \frac{V_{in}}{V_{out}}\)</p>
-        <p class="equation">\(-\frac{R_{1}}{R_{2}}(\frac{C R_{2} s + 1}{1}) = \frac{V_{in}}{V_{out}}\)</p>
-        <p><b>Final Transfer Function</b></p>
-        <p class="equation">\(-\frac{R_{2}}{R_{1}}(\frac{1}{CR_{2}s+1}) = \frac{V_{out}}{V_{in}}\)</p>
-        <p>System characteristics in terms of circuit components</p>
-        <p><b>Passband Gain</b></p>
-        <p class="equation">\(- \frac{R_{2}}{R_{1}} = H_{o}\)</p>
-        <p><b>Cut-off Frequency (pole location)</b></p>
-        <p class="equation">\(\frac{1}{2 \pi CR_{2}} = F_{o}\)</p>
+        <p><b>Beginning from the transfer function for Sallen-Key topology generalized for four impedances.</b></p>
+        <p class="equation">\( \frac{Z_{3}Z_{4}}{Z_{1}Z_{2}+Z_{3}(Z_{2}+Z_{1})+Z_{3}Z_{4}} = \frac{V_{in}}{V_{out}} \)</p>
+        <p class="equation">\( \frac{R_{3}R_{4}}{Z_{1}Z_{2}+R_{3}(Z_{2}+Z_{1})+R_{3}R_{4}} = \frac{V_{in}}{V_{out}} \)</p>
+        <p class="equation">\( \frac{R_{3}R_{4}}{\frac{1}{s^{2}C_{1}C_{2}}+R_{3}(\frac{1}{sC_{2}}+\frac{1}{sC_{1}})+R_{3}R_{4}} = \frac{V_{in}}{V_{out}} \)</p>
+        <p class="equation">\( \frac{\frac{s^{2}R_{3}R_{4}C_{1}C_{2}}{s^{2}C_{1}C_{2}}}{\frac{1 + sC_{1}R_{3} + sC_{2}R_{3} + s^{2}C_{1}C_{2}R_{3}R_{4}}{s^{2}C_{1}C_{2}}} = \frac{V_{in}}{V_{out}} \)</p>
+        
+        <p><b>Transfer Function</b></p>
+        <p class="equation">\( \frac{s^{2}R_{3}R_{4}C_{1}C_{2}}{s^{2}C_{1}C_{2}R_{3}R_{4} + s(C_{1}R_{3} + C_{2}R_{3}) + 1} = \frac{V_{in}}{V_{out}} \)</p>
+        
+        <p><b>Transfer Function to Standard Form</b></p>
+        <p class="equation">\( \frac{s^{2}}{s^{2} + 2(\frac{(C_{1}+C_{2})R_{3}}{2\sqrt{R_{3}R_{4}C_{1}C_{2}}})(\frac{1}{\sqrt{R_{3}R_{4}C_{1}C_{2}}})s 
+            + \frac{1}{R_{3}R_{4}C_{1}C_{2}}} = \frac{V_{in}}{V_{out}} \)</p>
+        
+        <p><b>Gain</b></p>
+        <p class="equation">\( \frac{R_{3}R_{4}C_{1}C_{2}}{R_{3}R_{4}C_{1}C_{2}} = 1 = K \)</p>
+
+        <p><b>Quality Factor</b></p>
+        <p class="equation">\( \frac{\sqrt{R_{3}R_{4}C_{1}C_{2}}}{R_{3}(C_{1}+C_{2})} = Q \)</p>
+
+        <p><b>Natural Frequency</b></p>
+        <p class="equation">\( \frac{1}{\sqrt{R_{3}R_{4}C_{1}C_{2}}} = \omega_{n} \)</p>
+        
 
     </div>  
 
