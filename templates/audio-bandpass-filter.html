@@ -139,7 +139,7 @@
         high frequencies, and we are left with a window of unchanged response in the middle. This concept is illustrated simply
         by these three plots below.
     </p>
-    <div style="display: flex; justify-content: center;">
+    <div class="figurePicture">
         <figure>
             <img src="{{url_for('static',filename='sk-lpf-mid-channel-freq-rsp.png')}}"/>
             <figcaption>
@@ -147,7 +147,7 @@
             </figcaption>
         </figure>
     </div>
-    <div style="display: flex; justify-content: center;">
+    <div class="figurePicture">
         <figure>
             <img src="{{url_for('static',filename='sk-hpf-mid-channel-freq-rsp.png')}}"/>
             <figcaption>
@@ -155,7 +155,7 @@
             </figcaption>
         </figure>
     </div>
-    <div style="display: flex; justify-content: center;">
+    <div class="figurePicture">
         <figure>
             <img src="{{url_for('static',filename='sk-lpf-hpf-mid-channel-freq-rsp.png')}}"/>
             <figcaption>
@@ -402,7 +402,7 @@
         </tr>
     </table>
     
-    <div style="display:flex; justify-content: center;">
+    <div class="figurePicture">
         <figure>
             <img width=100% src="{{url_for('static',filename='sk-cascade-three-band-eq.png')}}">
             <figcaption>The full circuit, including a resistive amplifier to manage gain on each channel, and and a summing amplifier to recombine the signals.</figcaption>
@@ -415,14 +415,14 @@
         between two slopes which are steep enough to not interact with neighboring filters in
         disfunctional ways.
     </p>
-    <div style="display:flex; justify-content: center;">
+    <div class="figurePicture">
         <figure>
             <img width="100%" src="{{url_for('static',filename='sk-cascade-three-band-eq-channels-plot.png')}}">
         </figure>
     </div>
     <p>Above is the amplitude frequency response for the three channels, with the low channel in red, the middle channel in green, and the high channel in orange.</p>
 
-    <div style="display:flex; justify-content: center;">
+    <div class="figurePicture">
         <figure>
             <img width="100%" src="{{url_for('static',filename='sj-cascade-three-band-eq-output-plot.png')}}">
         </figure>
@@ -441,7 +441,7 @@
     <h2 id="equation-solutions">Appendix A: Solutions for Transfer Functions and System Characteristics</h2>
     <div align="center">  
         <h3>Multiple Feedback Bandpass Filter</h3>
-        <div style="display: flex; justify-content: center;">
+        <div class="figurePicture">
             <figure>
                 <img width="80%" src="{{url_for('static',filename='multiple-feedback-bandpass-circuit.webp')}}"/>
                 <figcaption>Circuit diagram for the MFB Bandpass Filter</figcaption>
@@ -474,7 +474,7 @@
 
 
         <h3>Sallen-Key Low Pass Filter</h3>
-        <div style="display: flex; justify-content: center;">
+        <div class="figurePicture">
             <figure>
                 <img width="80%" src="{{url_for('static',filename='sk-lpf-cir.png')}}"/>
                 <figcaption>Circuit diagram for a Sallen-Key low pass filter</figcaption>
@@ -521,7 +521,7 @@
         <p class="equation">\( \frac{1}{\sqrt{C_{3}C_{4}R_{1}R_{2}}} = \omega_{n} \)</p>
         
         <h3>Sallen-Key High Pass Filter</h3>
-        <div style="display: flex; justify-content: center;">
+        <div class="figurePicture">
             <figure>
                 <img width="80%" src="{{url_for('static',filename='sk-hpf-cir.png')}}"/>
                 <figcaption>Circuit diagram for a Sallen-Key high pass filter</figcaption>

@@ -27,8 +27,8 @@
         having loads of fun learning to design things in FreeCAD. I figured I could iterative design my way to the
         perfect buckle in no time! I was wrong about how long it would take, and it's not perfect, but it was fun.
     </p>
-    <div style="display: flex; justify-content: center;">
-        <img width="60%" src="{{ url_for('static', filename='together_buckle.webp') }}""/>
+    <div class="figurePicture">
+        <img width="60%" src="{{ url_for('static', filename='together_buckle.webp') }}"/>
     </div>
 
     <h2 id="objective">Objective</h2>
@@ -66,7 +66,7 @@
         place. As the prongs are not capable of moving, a particular pattern of slots is cut into the flat circular
         half which allows the circular half to be captured by and removed from the prongs through a translation and rotation.
     </p>
-    <div style="display: flex; justify-content: center;">
+    <div class="figurePicture" style="gap: 20px">
         <img width="40%" src="{{ url_for('static', filename='flat_half.webp') }}"/>
         <img width="40%" src="{{ url_for('static', filename='bent_half.webp') }}"/>
     </div>
@@ -85,7 +85,7 @@
         bend the sheet metal are all of a custom design, and are composed of layers which are bolted
         together. The assemblies are part 3d printed, part sheet metal for reinforcement.
     </p>
-    <div style="display: flex; justify-content: center; align-items: stretch;">
+    <div class="figurePicture" style="align-items: stretch;">
         <figure style="width: 45%;" >
             <img width="100%" src="{{ url_for('static', filename='old_bender.webp') }}"/>
             <figcaption>An early design of the prong bender.</figcaption>
@@ -156,7 +156,7 @@
                 prongs come to rest in the small slots carved into the flat piece.
             </li>
         </ol>
-        <div style="display: flex; justify-content: center;">
+        <div class="figurePicture">
             <img width="22%" src="{{ url_for('static', filename='unbuckled_buckle.webp') }}"/>
             <img width="22%" src="{{ url_for('static', filename='first_stage_buckle.webp') }}"/>
             <img width="22%" src="{{ url_for('static', filename='half_buckled_buckle.webp') }}"/>

@@ -5,17 +5,30 @@
     <h1>Welcome to Skipping Stone Engineering!</h1>
     <p>
         This is the personal website of myself, Zachary Stone. I am an electrical engineer currently working in
-        embedded software engineering. This website will be used to showcase some of the personal projects which I am 
-        often working on.
+        embedded software engineering. In my free time, I am often working on different projects spanning electronics, software, 
+        and woodworking. I write about some of those projects here.
     </p>
 
-    <h2>Projects:</h2>
-    <a class="projectLink" href="{{ url_for('audio_bandpass_filter') }}">Audio Bandpass Filter</a>
-    <a class="projectLink" href="{{ url_for('solar_thermal_controller') }}">Embedded Solar Thermal Controller</a>
-    <a class="projectLink" href="{{ url_for('seesaw_island_riddle') }}">Seesaw Island Riddle</a>
-    <a class="projectLink" href="{{ url_for('bottle_cap_imager') }}">Bottle Cap Imager</a>
-    <a class="projectLink" href="{{ url_for('hip_belt_buckle') }}">Aluminum Hipbelt Buckle</a>
-    <a class="projectLink" href="{{ url_for('lifetime_investment_calc_page') }}">Lifetime Investment Calculator</a>
+    <div class="homePageColumnBox">
+        <div class="leftColumn">
+            <h2>Project Pages:</h2>
+            <a class="projectLink" href="{{ url_for('audio_bandpass_filter') }}">Audio Bandpass Filter</a>
+            <a class="projectLink" href="{{ url_for('solar_thermal_controller') }}">Embedded Solar Thermal Controller</a>
+            <a class="projectLink" href="{{ url_for('seesaw_island_riddle') }}">Seesaw Island Riddle</a>
+            <a class="projectLink" href="{{ url_for('bottle_cap_imager') }}">Bottle Cap Imager</a>
+            <a class="projectLink" href="{{ url_for('hip_belt_buckle') }}">Aluminum Hipbelt Buckle</a>
+            <a class="projectLink" href="{{ url_for('lifetime_investment_calc_page') }}">Lifetime Investment Calculator</a>    
+        </div>
+        <div class="rightColumn">
+            <figure style="width: 70%">
+                <img src="{{ url_for('static', filename='my-boat.webp') }}" style="width: 100%"/>
+                <figcaption>
+                    A rowboat I built because my old Sunfish sailboat needs some work, but I wanted to 
+                    get more experience before working on the Sunfish. A pre-project project.
+                </figcaption>
+            </figure>
+        </div>
+    </div>
     
     <!-- <a href="">
         <h3>3 Band Equalizer</h3>

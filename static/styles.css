@@ -112,3 +112,30 @@ table, th, td {
     text-align: center;
     font-size:1.3rem
 }
+
+.homePageColumnBox {
+    display:flex;
+    flex-direction:row
+}
+
+.leftColumn {
+    display:flex;
+    flex-direction:column;
+    justify-content: left;
+    flex:1; /*cause equal sharing in the columns*/
+}
+
+.rightColumn {
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    flex:1; /*cause equal sharing in the columns*/
+}
+
+/* The way I like to set up figures for picture display with caption */
+.figurePicture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
