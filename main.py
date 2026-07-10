@@ -33,6 +33,10 @@ def bottle_cap_imager():
 def hip_belt_buckle():
     return render_template("aluminum-hipbelt-buckle.html")
 
+@app.route("/slim-wallet")
+def slim_wallet_page():
+    return render_template("slim-wallet.html")
+
 @app.route("/lifetime-investment-calc")
 def lifetime_investment_calc_page():
     return render_template("lifetime-investment-calc.html")
@@ -44,6 +48,10 @@ def main_calc():
 @app.route("/audio-bandpass-filter")
 def audio_bandpass_filter():
     return render_template("audio-bandpass-filter.html")
+
+@app.route("/image-to-dxf")
+def image_to_dxf():
+    return render_template("image-to-dxf.html")
 
 # @app.route('/download')
 # def main_download():

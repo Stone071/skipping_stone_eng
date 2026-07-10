@@ -1,0 +1,157 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+
+    <div class="projectHead">
+        <h1>Slim Wallet</h1>
+        <p>A simple money-clip style wallet for up to four cards and cash. Measures in at just over 4mm thick.</p>
+    </div>
+        
+    <h2>Table of Contents</h2>
+    <ul class="tableOfContents">
+        <li><a href="#background">Background</a></li>
+        <li><a href="#requirements">Requirements</a></li>
+        <li><a href="#design">Design</a></li>
+        <li><a href="#assembly">Assembly</a></li>
+        <li><a href="#bom">Bill of Materials</a></li>
+    </ul>
+
+    <h2 id="background">Background</h2>
+    <p>
+        It's always when I'm wearing shorts in the summer that I realize how bulky my wallet is. In addition to this feeling,
+        my cork wallet began falling apart last summer (2025), and so it was time for an upgrade. Like most people, I barely use
+        most of the cards in my wallet. I took pictures/downloaded apps for all of my insurance cards and decided to stop
+        carrying them around. In the end, I really only need my driver's license, credit card, and debit card.
+    </p>
+    <p>
+        I like the slim wallets that have become popular in the past several years. My primary complaint with the design of
+        several of them is that they sandwich all your cards in one solid block between two plates of material. This feels like
+        a loss of functionality over my giant wallet, where each card has its own spot, making it easy to select and grab a
+        particular card at a glance. Additionally, the use of two external plates to contain the cards in the middle feels
+        excessive. If the goal is to reduce bulk, why not place one plate in the middle of the stack of cards and fasten
+        them to the outside of that?
+    </p>
+
+    <div class="figurePicture">
+        <figure style="min-width:0">
+            <img src="{{url_for('static', filename='slim-wallet-empty.webp')}}" style="max-width:100%;"/>
+            <figcaption>The empty wallet with a <a href="{{ url_for('image_to_dxf') }}">cottonwood leaf spring clip</a>.</figcaption>
+        </figure>
+        <figure style="min-width:0">
+            <img src="{{url_for('static', filename='slim-wallet-full.webp')}}" style="max-width:100%"/>
+            <figcaption>The wallet with cards.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="requirements">Requirements</h2>
+    <p>
+        <ol>
+            <li>The wallet design will prioritize lack of bulk, primarily by reducing thickness.</li>
+            <li>
+                The wallet must have unique poisitions for different cards, allowing the user to select and grab the right card at a glance.
+            </li>
+            <li>The wallet will not employ two outer covers to enclose its contents.</li>
+            <li>The wallet will be made of durable materials and will be repairable.</li>
+        </ol>
+    </p>
+
+    
+    <h2 id="design">Design</h2>
+    <p>
+        The design of the wallet is incredibly simple. The cards are stacked front to back and staggered in height such that each card 
+        pokes out of the stack by 10mm. This makes it easy to visually identify and select a card.
+    </p>
+    <p>
+        Most of the wallet is the backplate, which is formed from 1mm thick 5052 aluminum sheet. The backplate is the base on which the stack of 
+        cards sits, and has a flange on the left and right sides which are bent upward to prevent lateral movement of the cards. There are three
+        risers, each of which supports the bottom edge of a card. The three risers are stacked on top of each other and riveted to the backplate with
+        a solid aluminum rivet. The two lower risers are 0.8mm thick, and each support one card. The top riser is 1.5mm thick, and supports two cards.
+    </p>
+    <p>
+        There is a slight semicircle cut into the backplate on the left hand side which allows the user to easily push the cards away from the
+        the backplate, making it easy to grab an individual card with the opposite hand.
+    </p>
+    <p>
+        To keep the card stack secured to the backplate, a spring steel clip applies pressure to the front of the card stack. Being mostly a wide flat
+        piece, this clip can take many decorative shapes, and I have written some software to create different clips from images. This software
+        is detailed <a href="{{ url_for('image_to_dxf') }}">here</a>.
+    </p>
+    <p>
+        The wallet can be doubled up if desired to hold 8 cards + cash, but at that point the wallet would be around a centimeter thick, and isn't necessary
+        for my needs.
+    </p>
+
+    <h2 id="assembly">Assembly</h2>
+    <p>
+        Each piece of the wallet is ordered from SendCutSend already laser cut to the proper shape. There are only three steps to assemble.
+    </p>
+    <ol>
+        <li>Bend the two flanges on the backplate using a bench vise with press brake attachment.</li>
+        <li>Bend the decorative clip into shape using a 3D printed punch/die in a bench vise.</li>
+        <li>Stack the three risers on the back plate, put the clip on top, and fix the assembly together with two aluminum rivets.</li>
+    </ol>
+
+    <h2 id="bom">Bill of Materials</h2>
+    <table style="margin:auto">
+        <colgroup>
+            <col style="width: 25%"/>
+            <col style="width: 25%"/>
+            <col style="width: 25%"/>
+            <col style="width: 25%"/>
+        </colgroup>
+        <thead>
+            <tr class="header">
+                <th>Item</th>
+                <th>Cost @ Qt. 1</th>
+                <th>Cost @ Qt. 100</th>
+                <th>Cost @ Qt. 1000</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Backplate</td>
+                <td>$5.58</td>
+                <td>$2.11</td>
+                <td>$1.32</td>
+            </tr>
+            <tr>
+                <td>Bottom Riser</td>
+                <td>$1.69</td>
+                <td>$0.76</td>
+                <td>$0.46</td>
+            </tr>
+            <tr>
+                <td>Middle Riser</td>
+                <td>$1.31</td>
+                <td>$0.62</td>
+                <td>$0.38</td>
+            </tr>
+            <tr>
+                <td>Top Riser</td>
+                <td>$1.04</td>
+                <td>$0.50</td>
+                <td>$0.45</td>
+            </tr>
+            <tr>
+                <td>Spring Clip</td>
+                <td>$4.67</td>
+                <td>$1.88</td>
+                <td>$1.52</td>
+            </tr>
+            <tr>
+                <td>Rivets (2)</td>
+                <td>~$0.04</td>
+                <td>~$0.02</td>
+                <td>~$0.01</td>
+            </tr>
+            <tr>
+                <td><b>Total Cost Per Unit</b></td>
+                <td>$14.33</td>
+                <td>$5.89</td>
+                <td>$4.14</td>
+            </tr>
+        </tbody>
+    </table>
+   
+{% endblock %}
