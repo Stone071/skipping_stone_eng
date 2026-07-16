@@ -5,7 +5,91 @@
 
     <div class="projectHead">
         <h1>Image to DXF</h1>
-        <p>Writeup coming soon!</p>
+        <p>Extract outlines from images for use in CAD.</p>
+        <a class="repoLink" href="https://github.com/Stone071/img_to_dxf">Repository</a>
     </div>
+
+    <h2>Table of Contents</h2>
+    <ul class="tableOfContents">
+        <li><a href="#background">Background</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#output">Output</a></li>
+        <li><a href="#dependencies">Dependencies</a></li>
+    </ul>
+
+    <h2 id="background">Background</h2>
+    <p>I was working on a <a href="{{ url_for('slim_wallet_page') }}">slim wallet</a> 
+    which required a money clip style spring. Given that these springs are relatively wide and flat, it seemed
+    like a good place to add something decorative to the design. I decided
+    to use the outline of a Cottonwood leaf (my favorite tree) as this
+    decorative element. To do this, I needed to get the Cottonwood leaf
+    outline into FreeCAD. I had done a little bit of edge detection using
+    OpenCV2 before, and thought this would be the easiest way.</p>
+
+    <h2 id="overview">Overview</h2>
+    <p>The program is comprised of two stages.</p>
+    <p><code>preprocess_image.py</code> is the first stage, and its purpose is
+    to give the user a paintbrush to paint the outline of the object which
+    they would like to capture. The rest of the image is heavily blurred to
+    make it invisible to the edge detection algorithm.</p>
+
+    <div class="figurePicture">
+        <figure style="width:50%;">
+            <img src="{{ url_for('static', filename='preprocess_image_cottonwood_leaf.webp') }}" style="width:100%">
+            <figcaption><p>The tool opened by <code>preprocess_image.py</code></p></figcaption>
+        </figure>
+        <figure style="width:50%;">
+            <img src="{{ url_for('static', filename='img_to_dxf_cottonwood_leaf.webp') }}" style="width:100%">
+            <figcaption><p>The tool opened by <code>img_to_dxf.py</code></p></figcaption>
+        </figure>
+    </div>
+
+    <p>The second stage is where the object contour is captured.
+    <code>img_to_dxf.py</code> performs a common edge detection sequence:</p>
+    <ol>
+        <li>Convert the image to grayscale</li>
+        <li>Apply a small amount of blur</li>
+        <li>Perform Canny edge detection</li>
+        <li>Morph together the edge segments into closed contours</li>
+        <li>Display and capture the largest of the closed contours The program
+        exposes all of the input parameters required for these steps to the
+        user. Using sliders, they can fine tune the inputs to achieve the
+        contour they desire.</li>
+    </ol>
+
+    <p><code>pipeline.py</code> simply knits together the two stages for ease of use.</p>
+    <p>In the end, the saved DXF can be imported into most CAD softwares, where it can be edited, resized, and used to create solids.</p>
+
+    <h2 id="usage">Usage</h2>
+    <p>Place the image you would like to operate on in ./originals/ and then
+    run 
+    <br /><code>$ python3 pipeline.py</code></p>
+    <p>Instructions will be given in the command line. Whenever image manipulation is being performed, press “s”
+    to save the image, and “q” to quit the current step and move on to the
+    next.</p>
+    
+    <h2 id="output">Output</h2>
+    <div class="figurePicture">
+        <figure style="width:50%;">
+            <img src="{{ url_for('static', filename='freecad_cottonwood_leaf.png') }}" style="width:100%">
+            <figcaption><p>The contour of the cottonwood leaf imported into FreeCAD and made solid.</p></figcaption>
+        </figure>
+    </div>
+
+    <h2 id="dependencies">Dependencies</h2>
+    <ul>
+    <li>ezdxf</li>
+    <li>opencv2</li>
+    <li>numpy</li>
+    </ul>
+    
+    <h3 id="acquiring-dependencies">Acquiring Dependencies</h3>
+    <p>On Ubuntu, the system Python installation is managed by the OS, and
+    so the OS package manager is used to install Python packages.<br />
+    <code>$ apt install python3-ezdxf python3-numpy python3-opencv</code></p>
+    <p>Other systems may use the Python package manager to install each of
+    these.<br />
+    <code>$ pip install {package}</code></p>
    
 {% endblock %}
