@@ -126,6 +126,43 @@
         </tr>
     </table>
 
+    <h3>Color-By-Numbers</h3>
+    <p>
+        A functionality I have added to this script is the ability to generate color-by-numbers
+        type images.
+    </p>
+    <table>
+        <colgroup>
+            <col style="width: 33%" />
+            <col style="width: 33%" />
+            <col style="width: 33%" />
+        </colgroup>
+        <tr>
+            <th>Original</th>
+            <th>Bottlecap Lensed</th>
+            <th>Color By Numbers</th>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='cottonwood-leaf-before-caps.png') }}"/>
+            </td>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='cottonwood-leaf-after-caps.png') }}"/>
+            </td>
+            <td style="text-align: center;">
+                <img class="botCapImg"
+                    src="{{ url_for('static', filename='cottonwood-leaf-as-color-by-numbers.png') }}"/>
+            </td>
+        </tr>
+        <tr>
+            <td>A picture of a cottonwood leaf.</td>
+            <td>The picture with simplified colors and bottlecap lensing.</td>
+            <td>The picture as a color-by-numbers image, with the color code key placed at the bottom.</td>
+        </tr>
+    </table>
+
     <h3>Gifs</h3>
     <p>Like I said above, I think the gif outputs here are the most interesting.</p>
     <div class="figurePicture">
@@ -144,8 +181,7 @@
         like to study with with nature videos in the background, and I think the idea of a abstract
         ocean scene with the sounds of waves rolling onto the beach could be pleasing. I also have not 
         achieved my original goal, which was to use circles of different sizes that could be overlapped, like the
-        original mural I saw. Finally, I think it could be interesting to make a color-by-numbers book using
-        the bottle cap images. I may make a small web app to do this conversion from image to color-by-numbers style
+        original mural I saw. Another possibility is that I may make a small web app to do this conversion from image to color-by-numbers style
         output.
     </p>
 {% endblock %}
