@@ -16,6 +16,7 @@
             <li><a href="#build-dependencies">Building the Program</a></li>
             <li><a href="#how-to-play">How to Play</a></li>
             <li><a href="#my-algorithm">My Algorithm</a></li>
+            <li><a href="#algorithm-verification">Algorithm Verification</a></li>
         </ul>
     </div>
 
@@ -99,29 +100,21 @@
     </ol>
     
     <h3>Branching Tree</h3>
-    <p>In this tree, the islanders will have names A, B, C, D, E, F, G, H, I.</p>
     <p>
-        The words "safe individual" will be used to describe an islander which has been shown already to not be
-        the source of imbalance.
-    </p>
-    <p>
-        The branching logic for the algorithm is slightly too large to be read in one chart so two will be used.
-        Both charts share the same Test 1, but each displays the logic for one branch of the two branches following Test 1.
+        In this flowchart, the islanders will have names A, B, C, D, E, F, G, H, I. 
+        At the terminal node of each branch, the identity of the unique islander and 
+        whether they are lighter or heavier than the rest of the islanders is known.
     </p>
 
-    <h4>Flowchart 1 -- Test 1 was balanced</h4>
+    <h4>Seesaw Riddle Algorithm Flowchart</h4>
     <div class="figurePicture">
-        <img width="80%" src="{{ url_for('static', filename='set-IJKL.drawio.svg') }}"/>
-    </div>
-    <h4>Flowchart 2 -- Test 1 was unbalanced</h4>
-    <div class="figurePicture">
-        <img width="80%" src="{{ url_for('static', filename='set-ABCDEFGH.drawio.svg') }}"/>
+        <img width="100%" src="{{ url_for('static', filename='seesaw-riddle-algorithm.png') }}"/>
     </div>
 
     <h3>Example from the Game</h3>
     <p>
-        The branching logic can be hard to follow without showing results. The following is an example which follows the
-        rightmost path in Flowchart 2.
+        The branching logic can be hard to follow without showing results. The following 
+        is an example which follows the rightmost branch.
     </p>
     <p><b>Test 1</b></p>
     <p>SEESAW: ABCD -^- EFGH</p>
@@ -140,6 +133,24 @@
         test was not balanced, we know A or C is the imbalanced islander. Since there
         is no remaining possibility that one of them is heavy, the LEFT half dropping
         shows us that C is light.
+    </p>
+
+    <h3 id="algorithm-verification">Algorithm Verification</h3>
+    <p>
+        I recently refactored the terminal game written in C to be a game host library 
+        which can operate over different interfaces. This makes it much easier to perform
+        automated testing. A quick python script was written to request games from the host,
+        implement the algorithm described above, and play through 10000 randomized games. 
+        The results are below.
+    </p>
+    <div class="figurePicture">
+        <img width="100%" src="{{ url_for('static', filename='seesaw-riddle-simulation-results.png') }}"/>
+    </div>
+
+    <h3>Coming Soon</h3>
+    <p>
+        Now that the game logic is encapsulated in a shared library, I'll be implementing a web frontend here.
+        It's not ready yet though.
     </p>
 
 {% endblock %}
