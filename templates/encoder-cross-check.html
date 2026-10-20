@@ -1,0 +1,27 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+
+    <div class="projectHead">
+        <h1>Encoder Cross Check Presentation</h1>
+        <p>
+            This is a presentation I gave recently to demonstrate my thought process around 
+            solving day-to-day engineering problems at work. This specific problem was 
+            encountered during very early integration testing of a new elevator system and 
+            manifested as imprecise movements of the elevator car.
+        </p>
+    </div>
+
+    <iframe src="{{ url_for('static', filename='encoder-cross-check-presentation.pdf') }}" width="100%" height="600px">
+        This browser does not support PDFs. Please download the PDF to view it: 
+        <a href="{{ url_for('static', filename='encoder-cross-check-presentation.pdf') }}">Download PDF</a>
+    </iframe>
+
+    <p>
+        This presentation is written in markdown and converted to a set of beamer slides using Pandoc.
+        It is a new workflow to me. I have been finding it (mostly) functional for my purposes, showing
+        formatted math, plots/figures, and formatted code snippets in one place.
+    </p>
+
+{% endblock %}

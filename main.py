@@ -10,6 +10,7 @@
 ######################################################
 from flask import Flask, render_template
 import calc
+#import seesaw_game_interface
 
 app = Flask(__name__)
 
@@ -52,6 +53,14 @@ def audio_bandpass_filter():
 @app.route("/image-to-dxf")
 def image_to_dxf():
     return render_template("image-to-dxf.html")
+
+#@app.route("/submitSeesaw", methods=["POST"])
+#def main_submitSeesaw():
+#    return seesaw_game_interface.takeTurn()
+
+@app.route("/encoder-cross-check")
+def encoder_cross_check_page():
+    return render_template("encoder-cross-check.html")
 
 # @app.route('/download')
 # def main_download():
