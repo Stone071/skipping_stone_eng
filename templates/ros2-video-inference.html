@@ -1,0 +1,308 @@
+<!-- Inherit from layout.html -->
+{% extends 'layout.html' %}
+
+{% block main_content %}
+
+    <div class="projectHead">
+        <h1>ROS2 Camera Feed and Video Inference</h1>
+            <p>
+                This is a basic project in which I built a couple of ROS2 nodes to publish
+                and perform inference on a video stream.
+            </p>
+            <a class="repoLink" href="https://github.com/Stone071/ros2_basic_video_perception">Repository</a>
+    </div>
+        
+    <h2>Table of Contents</h2>
+    <ul class="tableOfContents">
+        <li><a href="#purpose">Purpose</a></li>
+        <li><a href="#proj-architecture">Project Architecture</a></li>
+        <li><a href="#modules-used">Modules Used</a></li>
+        <li><a href="#notes-on-quality-of-service">Notes on Quality of Service</a></li>
+        <li><a href="#development-environment">Development Architecture</a></li>
+        <li><a href="#linuxmiddleware-environment-customizations">Linux/Middleware Customizations</a></li>
+        <li><a href="#learning-summary">Learning Summary</a></li>
+        <li><a href="#key-takeaways">Key Takeaways</a></li>
+    </ul>
+
+    <h2 id="purpose">Purpose</h2>
+    <p>Learn the basics of writing software with ROS and gain experience with computer vision models.</p>
+    <div class="figurePicture">
+        <figure>
+            <img src="{{url_for('static', filename='ros2-video-inference-result.jpg')}}" style="width: 100%"/>
+            <figcaption>
+                An annotated image produced by the software discussed on this page. 
+                The image before inference was gathered from the dataset
+                <a href="https://huggingface.co/datasets/HumynLabs/Street-videos">HumynLabs/Street-videos</a>
+            </figcaption>
+        </figure>
+    </div>
+
+    <h2 id="proj-architecture">Project Architecture</h2>
+    <p>This project is composed of two nodes communicating through a single
+    topic. The first node reads in a video file using OpenCV2 and publishes
+    individual frames onto the topic at the frame rate of the video. This is
+    approximately the same as what would be happening in a live system with
+    a camera feed.</p>
+    <p>The second node subscribes to the topic and receives each frame,
+    placing the frame into its own internal queue to be consumed for
+    inference performed by OpenVINO, which is running the YOLOv11 computer
+    vision model. The second node also can query the first over the frame-rate
+    service to ask for the publisher's rate and determine whether the rate of frame
+    processing is falling behind real-time.</p>
+    <div class="figurePicture">
+        <figure>
+            <img src="{{url_for('static', filename='ros2-basic-video-perception-architecture.png')}}" style="width: 100%"/>
+        </figure>
+    </div>
+
+    <h2 id="modules-used">Modules Used</h2>
+    <ul>
+        <li>ROS2</li>
+        <li>Ultralytics YOLOv11</li>
+        <li><del>ONNX ort</del></li>
+        <li>OpenVINO</li>
+        <li>OpenCV2</li>
+        <li><del>Roboflow Supervision</del></li>
+        <li><del>Roboflow Trackers</del></li>
+    </ul>
+    <p>ROS2 is the backbone of the project here, handling major tasks such
+    as timing, node creation, data transfer between nodes, data quality
+    tracking.</p>
+    <p>YOLOv11 is the computer vision model being used to infer the identity
+    of objects in a frame.</p>
+    <p>ONNX runtime (ort) is an engine designed to assist in deployment of
+    machine learning models on different hardware and software stacks. When
+    developing on one machine and deploying on another, adapting the machine
+    learning model to the hardware it will be deployed on is a critical
+    step. This is especially true when deploying to mobile robotic hardware,
+    which may not posess as much compute as the development machine.</p>
+    <p>Ultimately, I ended up using OpenVINO to deploy the YOLOv11 model,
+    since OpenVINO is optimized for Intel CPUs. I was not able to realize
+    much speed benefit from this change though. For a true deployment of
+    this system, more quantitative benchmarking of different model
+    deployments and hardware would be necessary.</p>
+    <p>OpenCV2 is a long standing set of tools developed for performing
+    computer vision tasks in Python. In this project, it is mostly used as
+    as a method to easily read video files. Under the hood, CV2 represents
+    most data objects as Numpy NDArrays, which is an extremely common
+    standard for working with multi-demensional matrix data in Python.</p>
+    <p>Supervision and Trackers are used together to perform object
+    detection and tracking which persists across consecutive frames of a
+    video. Inference allows us to detect what is in a still image from a
+    video, and object detection/tracking allows us to assign unique
+    identities to each object and make observations of them over time. I
+    ultimately did not implement the object tracking, as my VM was
+    already struggling to complete the inference step in a reasonable
+    timeframe.</p>
+    <p>All of these Python modules except OpenCV2 are new to me, and I
+    enjoyed learning a bit about each. They each present highly useful tools
+    for computer vision tasks which I hope to make use of in future
+    projects.</p>
+
+    <h2 id="notes-on-quality-of-service">Notes on Quality of Service</h2>
+
+    <p>It seems to me like customizable Quality of Service is one of the
+        primary improvements of using ROS2 over ROS1. I can’t imagine trying to
+        develop a dependable real-time system without the controls exhibited
+        here, and I spent a bit of time understanding the options available.
+        Each time I wondered if there was a control or measurement for X, I
+        found one in QoS or event callbacks.</p>
+    <p>For my “video-stream” topic, I made use of the following
+    controls.</p>
+    <div class="sourceCode" id="cb2">
+        <pre class="sourceCode python">
+            <code class="sourceCode python">
+<span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Any data for which we desire real-time performance should prefer BEST_EFFORT publishing</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># over RELIABLE publishing, reducing latency of published messages</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    publish_deadline <span class="op">=</span> Duration(nanoseconds<span class="op">=</span><span class="dv">50000000</span>) <span class="co"># 50ms deadline. 25 fps is 40ms period.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    message_lifespan <span class="op">=</span> Duration(nanoseconds<span class="op">=</span><span class="dv">50000000</span>) <span class="co"># 50ms persistence of each message on topic.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    lease_duration <span class="op">=</span> Duration(nanoseconds<span class="op">=</span><span class="dv">500000000</span>) <span class="co"># Publisher is considered dead after 500ms without publishing.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    publish_queue_depth <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    video_streamer_qos <span class="op">=</span> QoSProfile(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            history<span class="op">=</span>HistoryPolicy.KEEP_ALL,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            depth<span class="op">=</span>publish_queue_depth, <span class="co"># reduce overhead by maintaining few past samples</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            reliability<span class="op">=</span>ReliabilityPolicy.BEST_EFFORT, <span class="co"># prefer low latency to absolute reliability</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            durability<span class="op">=</span>DurabilityPolicy.VOLATILE, <span class="co"># DO NOT send old samples to late-joining subs</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            deadline<span class="op">=</span>publish_deadline, <span class="co"># 50ms gives 25% margin on 40ms period before throwing a warning.</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            lifespan<span class="op">=</span>message_lifespan, <span class="co"># Don&#39;t let old images persist on topic. Just use the new ones.</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            liveliness<span class="op">=</span>LivelinessPolicy.MANUAL_BY_TOPIC, <span class="co"># must publish to be considered alive</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            liveliness_lease_duration<span class="op">=</span>lease_duration <span class="co"># 500ms of no publish before considered dead</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
+    
+    <p>On my development virtual machine, I use different values for each
+    duration, since the VM ultimately cannot keep up with real-time 1080p
+    video inference.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python">
+<span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set to receive a callback when publisher misses deadline</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    publisher_event_callbacks <span class="op">=</span> PublisherEventCallbacks(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        deadline<span class="op">=</span><span class="va">self</span>._deadline_missed_callback, <span class="co"># called when publishing deadline is missed</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        liveliness<span class="op">=</span><span class="va">self</span>._liveliness_missed_callback, <span class="co"># called when publisher misses liveliness duration</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        matched<span class="op">=</span><span class="va">self</span>._subscriber_matched_callback, <span class="co"># called when a subscriber joins topic</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        incompatible_qos<span class="op">=</span><span class="va">self</span>._incompatible_qos_callback, <span class="co"># called when QoS mismatch on topic</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        use_default_callbacks<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
+    
+    <p>The quality of service object and event callbacks object are both
+    passed as arguments when creating a publisher or subscriber object for a
+    topic. There are slightly different options available for event
+    callbacks as a publisher or subscriber.</p>
+
+    <h2 id="development-environment">Development Environment</h2>
+    <p>
+        This project was developed on a virtual machine using ROS2 jazzy and a Python virtual
+        environment.
+    </p>
+    <h3 id="issues">Issue</h3>
+    <p><strong>Matching ROS version, system Python version, and libraries available
+    for this Python version.</strong></p>
+
+    <p>In my experience, developing complex projects in Python which knit
+    together several large libraries can introduce a dependency chain that
+    is out of the developer’s control at at times becomes difficult to
+    maintain. I’m sure part of the challenge here is my own lack of
+    experience developing in this fashion, but I did find myself facing this
+    problem once again developing this project.</p>
+    <p>The specific issue I faced was that I first decided to develop this
+    project directly on my personal computer, running Ubuntu 26.04 and
+    Python 3.14.14. Since ROS2 releases target specific Linux and Python
+    versions, I chose ROS2 Lyrical Luth, the release of ROS2 compatible with
+    my OS and system Python, which is also the latest LTS release. This
+    choice would prove to be incompatible with the other major dependency in
+    the original version of this project, which was the CARLA Simulator.
+    CARLA was going to be used as a source of simulated objects and a camera
+    feed, but the Python module is only available for Python 3.12 at the
+    latest. While it is possible to build Python modules from source for the
+    system Python in use, I would hesitate to pursue this option, as these
+    custom builds have not been verified.</p>
+
+    <h3 id="solution">Solution</h3>
+    <p>The solution here is the option I should’ve pursued from the start,
+    which is to use a virtual machine as the development environment. This
+    option puts the developer in control of the Linux version, system Python
+    version, and makes it easy to track exactly what dependencies have been
+    installed in development and are necessary for runtime. Since the
+    development/functional testing environment and deployment environment
+    must match, and it does not make sense to develop directly on the
+    deployment machine, the logical choice is to control the development
+    environment in this way.</p>
+    <p>It is fortunate also that ROS2 is compatible with developing in a
+    virtual Python environment. Though ROS2 runs using the system Python
+    interpreter, other Python dependencies can be installed in a Python
+    development environment using venv. So ultimately, development for this
+    project was performed in an Ubuntu 24.04 virtual machine using ROS2
+    Jazzy Jalisco, and all other Python modules installed into a virtual
+    Python environment using venv.</p>
+                                                    
+    <h2 id="linuxmiddleware-environment-customizations">Linux/Middleware
+    Environment Customizations</h2>
+
+    <h3 id="issue">Issue</h3>
+    <p><strong>Complications getting large Image messages to transfer through the
+    DDS middleware</strong></p>
+
+    <h3 id="diagnosis-and-solution">Diagnosis and Solution</h3>
+    <div class="sourceCode" id="cb1"><pre
+    class="sourceCode bash"><code class="sourceCode bash">
+    <span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This command sets up FASTDDS for large data with 10MB sockets. Our 1080p frames are about 6MB, so there is healthy margin here with 10MB.</span></span>
+    <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">RMW_IMPLEMENTATION</span><span class="op">=</span>rmw_fastrtps_cpp</span>
+    <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">FASTDDS_BUILTIN_TRANSPORTS</span><span class="op">=</span><span class="st">&#39;LARGE_DATA?max_msg_size=10MB&amp;sockets_size=10MB&#39;</span></span>
+    <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+    <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Starting the nodes after setting this produced error messages that the socket size was not able to be set. The linux socket size was upped to 16MB to fix.</span></span>
+    <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> sysctl <span class="at">-w</span> net.core.rmem_max=16777216</span>
+    <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> sysctl <span class="at">-w</span> net.core.wmem_max=16777216</span></code></pre></div>
+    <p>There was an interesting issue when using the video-stream topic to
+    publish and consume relatively large Image frames. When using Reliable
+    Quality of Service on the video-stream topic, Image messages were
+    published and received by subscribers as normal. However, given the
+    real-time nature of the task being live video processing and inference,
+    a Reliable QoS is not desired, as it results in longer transmit times
+    due to messages being retried in the case of failure.</p>
+    <p>As soon as the QoS reliability policy was changed to Best Effort, the
+    subscriber began receiving little to no data. <code>ros2 topic bw</code>
+    and <code>ros2 topic hz</code> occasionally did show that data was
+    appearing on the topic, but very little, and far less/far less
+    frequently than reported by the publisher.</p>
+    <p>After setting up callbacks for events occurring on the topic, it was
+    clear that every Image message published by the publisher was “Lost” in
+    transit when using FastDDS as the ROS middleware. CycloneDDS was also
+    tried, and in this case there was no data received on the bus, and no
+    callbacks reported for lost messages. However, if the frames were
+    resized to 320x240 before publishing on the topic as Image messages, all
+    data was received as expected. It was found that the middleware and
+    Linux environment were not configured to handle the large payloads being
+    published as single messages. A single 1920x1080 frame with 3 byes of
+    color information is a data payload of at least 5.9 MB.</p>
+    <p>To resolve this issue, some middleware/linux customizing was
+    required. FastDDS has a “Large Data” mode which allows the user to
+    specify a maximum message size and socket size. This will increase the
+    size of individual messages which can be sent, and reduce the number of
+    message fragments which need to be sent over the network to encapsulate
+    an individual Image message.</p>
+    <p>Increasing the FastDDS settings beyond what the Linux Kernel is set
+    up for will produce error messages on startup, and not resolve the
+    issue, so the Linux Kernel socket size also has to be increased. The
+    sysctl commands listed increase the maximum buffer available for reading
+    and writing on all sockets, including the TCP and UDP sockets used by
+    the ROS middleware.</p>
+
+    <h2 id="learning-summary">Learning Summary</h2>
+    <ul>
+        <li>Setting up a ROS2 Python package</li>
+        <li>Basic ROS tools
+        <ul>
+            <li><code>$ ros2 topic list -t</code></li>
+            <li><code>$ ros2 topic hz {topic}</code></li>
+            <li><code>$ ros2 topic bw {topic}</code></li>
+            <li><code>$ ros2 service list -t</code></li>
+            <li><code>$ ros2 interface show {.srv}</code></li>
+            <li><code>&gt;&gt;&gt; dir(rclpy)</code> for exploration of Python
+            module</li>
+        </ul></li>
+        <li>ROS2 Quality of Service Controls</li>
+        <li>Basics of using computer vision models in Python</li>
+        <li>Debugging and configuring Linux/RMW for transmitting large
+        messages</li>
+        <li>Sourcing datasets from HuggingFace</li>
+    </ul>
+
+    <p>
+        As a first time developer using ROS, the topic and service inspection 
+        tools were used over and over.
+    </p>
+    <pre><code>
+    ros2 topic hz -> measures frequency of messages
+    ros2 topic bw -> measures data throughput of messages
+    </code></pre> 
+    Were very useful for getting a verified view of data being transferred on a topic. 
+    For large Image messages, the throughput was especially important to verify no data
+    was being lost.
+    <p>
+        The <code>--symlink-install</code> argument for colcon made
+        all the executables symlinked to the development source code, so the
+        project did not have to be rebuilt anytime changes were made that I
+        wanted to test.
+    </p>
+
+    <h2 id="key-takeaways">Key Takeaways</h2>
+    <p>ROS provides API calls that greatly simplify most functionality
+    required for building real time systems, and ROS2 improves on ROS1 by providing more
+    customizable topics that can be tailored toward reliability or data
+    throughput.</p>
+    <p>Some of the tasks which ROS makes really easy:</p>
+    <ul>
+        <li>Asynchronous communication</li>
+        <li>Queue creation and thread-safe access</li>
+        <li>Timing calculations</li>
+        <li>Deadline setting</li>
+        <li>Peer discovery</li>
+    </ul>
+
+    <p>Developing real-time systems in Python is an interesting change for
+    me. To be honest, I like how a compiled language catches most issues
+    before runtime. With Python, I found that I was making trivial mistakes
+    in uncommonly called code paths, and only finding bugs during unlikely
+    testing scenarios. This made clear how important a static checker/linter
+    and thorough unit testing is for Python programs that need to be
+    robust.</p>
+
+{% endblock %}

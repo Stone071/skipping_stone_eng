@@ -18,6 +18,10 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route("/ros2-video-inference")
+def ros2_video_inference_page():
+    return render_template("ros2-video-inference.html")
+
 @app.route("/solar-thermal-controller")
 def solar_thermal_controller():
     return render_template("solar-thermal-controller.html")
